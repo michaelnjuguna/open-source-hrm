@@ -28,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('/')
             ->login()
             ->registration()
+
             ->colors([
                 'primary' => Color::Sky,
             ])

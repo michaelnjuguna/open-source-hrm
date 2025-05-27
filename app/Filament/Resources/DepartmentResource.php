@@ -39,13 +39,13 @@ class DepartmentResource extends Resource
                     ->label('Description')
                     ->placeholder('Enter department description'),
                 Forms\Components\Select::make('manager_id')
-                    ->relationship(
-                        name: 'employees',
-                        titleAttribute: 'id',
-                        modifyQueryUsing: fn($query) => $query->select('id', 'first_name', 'last_name')->orderBy('first_name', 'asc'),
-                    )
+                    ->options(function () {
+                        return \App\Models\Employee::all()->pluck('full_name', 'id');
+                    })
                     ->label('Manager')
-                    ->searchable()
+                    ->searchable(
+
+                    )
                     ->placeholder('Select a manager')
                     ->preload()
                     ->nullable(),
@@ -56,6 +56,7 @@ class DepartmentResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(static::getEloquentQuery()->with('manager'))
             ->columns([
                 //
                 Tables\Columns\TextColumn::make('name')
@@ -69,7 +70,7 @@ class DepartmentResource extends Resource
                     ->limit(50)
                     ->label('Description'),
                 Tables\Columns\TextColumn::make('manager_id')
-
+                    ->formatStateUsing(fn($record) => $record->manager?->full_name ?? 'No Manager')
                     ->label('Manager')
                     ->searchable()
                     ->sortable()
@@ -80,6 +81,7 @@ class DepartmentResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

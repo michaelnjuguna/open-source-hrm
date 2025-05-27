@@ -18,6 +18,13 @@ class Employee extends Model
         'emergency_contact_name',
         'emergency_contact_phone',
         'date_of_birth',
+        'gender',
+        'marital_status',
+        'employment_type',
+        'hire_date',
+        'termination_date',
+        'is_active',
+        'department_id',
     ];
 
     protected $casts = [
@@ -25,6 +32,7 @@ class Employee extends Model
         'hire_date' => 'date',
         'termination_date' => 'date',
         'is_active' => 'boolean',
+        'department_id' => 'integer',
     ];
     protected $appends = [
         'full_name',
