@@ -104,6 +104,11 @@ class EmployeeResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(
+                static::getEloquentQuery()
+                    ->with(['department'])
+                    ->latest()
+            )
             ->columns([
                 //
                 Tables\Columns\TextColumn::make('employee_number')

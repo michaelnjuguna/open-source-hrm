@@ -56,7 +56,10 @@ class DepartmentResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(static::getEloquentQuery()->with('manager'))
+            ->query(
+                static::getEloquentQuery()->with('manager')->latest()
+
+            )
             ->columns([
                 //
                 Tables\Columns\TextColumn::make('name')
