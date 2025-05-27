@@ -59,7 +59,9 @@ class EmployeeResource extends Resource
                     ->schema([
                         TextInput::make('email')->email(),
                         TextInput::make('phone'),
-                        TextInput::make('national_id')->required()->unique(),
+                        TextInput::make('national_id')->required()->unique(ignoreRecord: true)
+                            ->integer()
+                        ,
                         TextInput::make('kra_pin'),
                     ])
                     ->columns(2),
@@ -104,12 +106,33 @@ class EmployeeResource extends Resource
         return $table
             ->columns([
                 //
+                Tables\Columns\TextColumn::make('employee_number')
+                    ->label('Employee Number')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('full_name')
+                    ->label('Name')
+                    ->searchable(false)
+                    ->sortable(false),
+                Tables\Columns\TextColumn::make('department.name')
+                    ->label('Department')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('email')
+                    ->label('Email')
+                    ->searchable()
+                    ->sortable(),
+
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\DeleteAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

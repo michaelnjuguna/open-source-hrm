@@ -13,7 +13,7 @@ class Department extends Model
         'description',
         'manager_id',
     ];
-    protected $with = ['employees'];
+    // protected $with = ['employees'];
     protected $casts = [
         'manager_id' => 'integer',
     ];
