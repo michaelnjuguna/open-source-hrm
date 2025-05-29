@@ -71,6 +71,23 @@ class EmployeeResource extends Resource
                         TextInput::make('emergency_contact_phone'),
                     ])
                     ->columns(2),
+                Section::make('Next of Kin')
+                    ->schema([
+                        TextInput::make('next_of_kin_name')
+                            ->label('Name')
+                            ->required(),
+                        TextInput::make('next_of_kin_relationship')
+                            ->label('Relationship')
+                            ->required(),
+                        TextInput::make('next_of_kin_phone')
+                            ->required()
+                            ->tel()
+                            ->label('Phone'),
+                        TextInput::make('next_of_kin_email')
+                            ->label('Email')
+                            ->email(),
+                    ])
+                    ->columns(2),
                 Section::make('Employment Details')
                     ->schema([
                         Select::make('department_id')

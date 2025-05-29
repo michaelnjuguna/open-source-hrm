@@ -25,6 +25,10 @@ class Employee extends Model
         'termination_date',
         'is_active',
         'department_id',
+        'next_of_kin_name',
+        'next_of_kin_relationship',
+        'next_of_kin_phone',
+        'next_of_kin_email',
     ];
 
     protected $casts = [
