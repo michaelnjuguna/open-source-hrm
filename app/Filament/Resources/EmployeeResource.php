@@ -18,6 +18,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+
 class EmployeeResource extends Resource
 {
     protected static ?string $model = Employee::class;
@@ -144,6 +145,45 @@ class EmployeeResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->label('Email')
                     ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('phone')
+                    ->label('Phone')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('national_id')
+                    ->label('National ID')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('kra_pin')
+                    ->label('KRA PIN')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('employment_type')
+                    ->label('Employment Type')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
+                Tables\Columns\ToggleColumn::make('is_active')
+                    ->label('Is Active')
+
+                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('date_of_birth')
+                    ->label('Date of Birth')
+                    ->date()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('termination_date')
+                    ->label('Termination Date')
+                    ->date()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('hire_date')
+                    ->label('Hire Date')
+                    ->date()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
 
             ])
