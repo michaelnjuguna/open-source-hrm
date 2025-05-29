@@ -9,7 +9,15 @@ class StatsOverview extends BaseWidget
 {
     public function redirectToEmployees()
     {
-        return redirect()->to('/employees');
+        return redirect()->to('employees?tableFilters[is_active][isActive]=false&tableFilters[is_inactive][isActive]=false');
+    }
+    public function redirectToInactiveEmployees()
+    {
+        return redirect()->to('employees?tableFilters[is_active][isActive]=false&tableFilters[is_inactive][isActive]=true');
+    }
+    public function redirectToActiveEmployees()
+    {
+        return redirect()->to('employees?tableFilters[is_active][isActive]=true&tableFilters[is_inactive][isActive]=false');
     }
 
     protected function getStats(): array
@@ -18,6 +26,7 @@ class StatsOverview extends BaseWidget
             'class' => 'cursor-pointer',
             'wire:click' => "redirectToEmployees()",
         ];
+
         return [
             //
             Stat::make('Total Employees', \App\Models\Employee::count())
@@ -29,14 +38,24 @@ class StatsOverview extends BaseWidget
             Stat::make('Active Employees', \App\Models\Employee::where('is_active', true)->count())
                 ->color('success')
                 ->label('Active Employees')
-                ->extraAttributes($commonAttributes)
+                ->extraAttributes(
+                    [
+                        'class' => 'cursor-pointer',
+                        'wire:click' => "redirectToActiveEmployees()"
+                    ]
+                )
                 ->description('Number of employees currently active employees')
                 ->icon('heroicon-o-check-circle'),
             Stat::make('Inactive Employees', \App\Models\Employee::where('is_active', false)->count())
                 ->label('Inactive Employees')
                 ->description('Number of employees who are no longer active')
                 ->color('danger')
-                ->extraAttributes($commonAttributes)
+                ->extraAttributes(
+                    [
+                        'class' => 'cursor-pointer',
+                        'wire:click' => "redirectToInactiveEmployees()"
+                    ]
+                )
                 ->icon('heroicon-o-x-circle'),
         ];
     }

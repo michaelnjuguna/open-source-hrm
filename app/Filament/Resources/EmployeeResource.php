@@ -14,9 +14,11 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Filters\Filter;
 
 
 class EmployeeResource extends Resource
@@ -127,6 +129,22 @@ class EmployeeResource extends Resource
                     ->with(['department'])
                     ->latest()
             )
+            ->filters([
+
+
+                Filter::make('is_active')
+                    ->label('Active Employees')
+                    // ->toggle()
+                    ->query(fn(Builder $query): Builder => $query->where('is_active', true))
+                    ->default(true),
+                Filter::make('is_inactive')
+                    ->label('Inactive Employees')
+                    // ->toggle()
+                    ->query(fn(Builder $query): Builder => $query->where('is_active', false))
+                    ->default(false),
+
+
+            ])
             ->columns([
                 //
                 Tables\Columns\TextColumn::make('employee_number')
@@ -187,9 +205,7 @@ class EmployeeResource extends Resource
                     ->sortable(),
 
             ])
-            ->filters([
-                //
-            ])
+
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
