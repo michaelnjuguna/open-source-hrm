@@ -14,6 +14,8 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -26,8 +28,8 @@ class EmployeeResource extends Resource
     protected static ?string $model = Employee::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
-    protected static ?string $navigationGroup = 'Human Resources';
-
+    protected static ?string $navigationGroup = 'HR Management';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -61,7 +63,7 @@ class EmployeeResource extends Resource
                 Section::make('Contact Information')
                     ->schema([
                         TextInput::make('email')->email(),
-                        TextInput::make('phone'),
+                        TextInput::make('phone')->tel()->required(),
                         TextInput::make('national_id')->required()->unique(ignoreRecord: true)
                             ->integer()
                         ,
@@ -129,22 +131,27 @@ class EmployeeResource extends Resource
                     ->with(['department'])
                     ->latest()
             )
-            ->filters([
+            ->filters(
+                [
 
 
-                Filter::make('is_active')
-                    ->label('Active Employees')
-                    // ->toggle()
-                    ->query(fn(Builder $query): Builder => $query->where('is_active', true))
-                    ->default(true),
-                Filter::make('is_inactive')
-                    ->label('Inactive Employees')
-                    // ->toggle()
-                    ->query(fn(Builder $query): Builder => $query->where('is_active', false))
-                    ->default(false),
+                    Filter::make('is_active')
+                        ->label('Active Employees')
+                        // ->toggle()
+                        ->query(fn(Builder $query): Builder => $query->where('is_active', true))
+                        ->default(false),
+                    Filter::make('is_inactive')
+                        ->label('Inactive Employees')
+                        // ->toggle()
+                        ->query(fn(Builder $query): Builder => $query->where('is_active', false))
+                        ->default(false),
 
 
-            ])
+
+
+                ],
+                layout: FiltersLayout::AboveContent
+            )
             ->columns([
                 //
                 Tables\Columns\TextColumn::make('employee_number')
@@ -230,6 +237,7 @@ class EmployeeResource extends Resource
     {
         return [
             'index' => Pages\ListEmployees::route('/'),
+            'view' => Pages\ViewEmployee::route('/{record}'),
             // 'create' => Pages\CreateEmployee::route('/create'),
             // 'edit' => Pages\EditEmployee::route('/{record}/edit'),
         ];

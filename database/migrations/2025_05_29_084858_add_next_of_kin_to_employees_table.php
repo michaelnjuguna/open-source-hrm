@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::table('employees', function (Blueprint $table) {
             //
-            $table->string('next_of_kin_name')->nullable()->after('email');
+            $table->string('next_of_kin_name')->nullable()->after('phone');
             $table->string('next_of_kin_relationship')->nullable()->after('next_of_kin_name');
             $table->string('next_of_kin_phone')->nullable()->after('next_of_kin_relationship');
             $table->string('next_of_kin_email')->nullable()->after('next_of_kin_phone');

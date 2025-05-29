@@ -28,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->spa()
             // Footer
             ->renderHook(
                 PanelsRenderHook::FOOTER,
@@ -53,6 +54,10 @@ class AdminPanelProvider extends PanelProvider
                     // Widgets\FilamentInfoWidget::class,
                 StatsOverview::class,
                 \App\Filament\Resources\EmployeeResource\Widgets\StatsOverview::class,
+            ])
+            ->navigationGroups([
+                'Organization',
+                'HR Management'
             ])
             ->middleware([
                 EncryptCookies::class,
