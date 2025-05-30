@@ -16,6 +16,8 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -104,12 +106,29 @@ class AttendanceResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(
+                static::getEloquentQuery()
+                    ->with(['employee', 'shift'])
+                    ->withoutGlobalScopes([SoftDeletingScope::class])
+                    ->latest()
+            )
             ->columns([
                 Tables\Columns\TextColumn::make('employee.employee_number')
                     ->label('Employee Number')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('employee.full_name')
+                    ->searchable([
+                        'employees.first_name',
+                        'employees.last_name',
+
+                    ])
+                    ->sortable(
+                        [
+                            'employees.first_name',
+                            'employees.last_name',
+                        ]
+                    )
                     ->label('Name')
                 ,
                 Tables\Columns\TextColumn::make('shift.name')
@@ -134,9 +153,36 @@ class AttendanceResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Remarks'),
             ])
-            ->filters([
-                //
-            ])
+            ->filters(
+                [
+                    SelectFilter::make('employee_id')
+                        ->label('Employee')
+                        ->searchable()
+                        ->options(
+                            \App\Models\Employee::all()->pluck('full_name', 'id')
+                        ),
+                    SelectFilter::make('shift_id')
+                        ->label('Shift')
+                        ->options(
+                            \App\Models\Shift::all()->pluck('name', 'id')
+                        ),
+                    Tables\Filters\Filter::make('date')
+                        ->form([
+                            Forms\Components\DatePicker::make('date')
+                                ->label('Select Date')
+                                ->required()
+                            // ->default(now())
+                        ])
+                        ->query(function (Builder $query, array $data) {
+                            if (isset($data['date'])) {
+                                return $query->whereDate('date', $data['date']);
+                            }
+                            return $query;
+                        })
+
+                ],
+                layout: FiltersLayout::AboveContent
+            )
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

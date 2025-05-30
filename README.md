@@ -6,7 +6,7 @@ A modern, Laravel + FilamentPHP-based **Human Resource Management System** tailo
 
 -   **Laravel 12+**
 -   **FilamentPHP 3.x** (admin panel)
--   **MySQL** (database)
+-   **MySQL/MariaDB** (database)
 -   **PHP 8.2+**
 -   **Tailwind CSS** (via Filament)
 -   **Alpine.js** (via Filament)
@@ -45,3 +45,5 @@ All contributions are welcome. Please fork the repo, create a feature branch and
 ## 📜 License
 
 [MIT license](LICENSE)
+
+Made with ❤️
