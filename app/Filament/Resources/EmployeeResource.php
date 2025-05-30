@@ -161,8 +161,16 @@ class EmployeeResource extends Resource
 
                 Tables\Columns\TextColumn::make('full_name')
                     ->label('Name')
-                    ->searchable(false)
-                    ->sortable(false),
+                    ->searchable(
+                        [
+                            'first_name',
+                            'last_name'
+                        ]
+                    )
+                    ->sortable([
+                        'first_name',
+                        'last_name'
+                    ]),
                 Tables\Columns\TextColumn::make('department.name')
                     ->label('Department')
                     ->searchable()
