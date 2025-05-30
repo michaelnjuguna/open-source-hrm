@@ -180,8 +180,8 @@ class AttendanceResource extends Resource
                             return $query;
                         })
 
-                ],
-                layout: FiltersLayout::AboveContent
+                ]
+
             )
             ->actions([
                 Tables\Actions\ViewAction::make(),

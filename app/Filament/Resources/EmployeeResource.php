@@ -145,12 +145,17 @@ class EmployeeResource extends Resource
                         // ->toggle()
                         ->query(fn(Builder $query): Builder => $query->where('is_active', false))
                         ->default(false),
-
+                    SelectFilter::make('department_id')
+                        ->label('Department')
+                        ->options(
+                            fn() => \App\Models\Department::all()->pluck('name', 'id')
+                        )
+                        ->searchable()
 
 
 
                 ],
-                layout: FiltersLayout::AboveContent
+
             )
             ->columns([
                 //
@@ -247,7 +252,7 @@ class EmployeeResource extends Resource
             'index' => Pages\ListEmployees::route('/'),
             'view' => Pages\ViewEmployee::route('/{record}'),
             // 'create' => Pages\CreateEmployee::route('/create'),
-            // 'edit' => Pages\EditEmployee::route('/{record}/edit'),
+            'edit' => Pages\EditEmployee::route('/{record}/edit'),
         ];
     }
 }

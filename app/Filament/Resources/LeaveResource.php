@@ -169,8 +169,8 @@ class LeaveResource extends Resource
                         ])
                         ->default(null),
 
-                ],
-                layout: FiltersLayout::AboveContent
+                ]
+
             )
             ->actions([
                 Tables\Actions\ViewAction::make(),

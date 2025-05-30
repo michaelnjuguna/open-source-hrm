@@ -19,8 +19,10 @@ A modern, Laravel + FilamentPHP-based **Human Resource Management System** tailo
 
 -   **Employee Records** (with KRA PIN, NSSF, NHIF, etc.)
 -   **Departments**
+-   **Attendance**
+-   **Leave**
 -   _More modules coming soon_  
-     (Leave, Payroll, Attendance, Recruitment, Training, etc.)
+     (Payroll, Recruitment, Training, etc.)
 
 ## ⚙️ Installation
 
