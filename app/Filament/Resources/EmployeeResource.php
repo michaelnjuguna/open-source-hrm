@@ -37,6 +37,8 @@ class EmployeeResource extends Resource
             ->schema([
                 //
                 Section::make('Basic Information')
+                    ->collapsible()
+
                     ->schema([
                         TextInput::make('employee_number')
                             ->required()
@@ -61,6 +63,7 @@ class EmployeeResource extends Resource
                     ])
                     ->columns(2),
                 Section::make('Contact Information')
+                    ->collapsible()
                     ->schema([
                         TextInput::make('email')->email(),
                         TextInput::make('phone')->tel()->required(),
@@ -71,12 +74,14 @@ class EmployeeResource extends Resource
                     ])
                     ->columns(2),
                 Section::make('Emergency Contact')
+                    ->collapsible()
                     ->schema([
                         TextInput::make('emergency_contact_name'),
                         TextInput::make('emergency_contact_phone'),
                     ])
                     ->columns(2),
                 Section::make('Next of Kin')
+                    ->collapsible()
                     ->schema([
                         TextInput::make('next_of_kin_name')
                             ->label('Name')
@@ -94,6 +99,7 @@ class EmployeeResource extends Resource
                     ])
                     ->columns(2),
                 Section::make('Employment Details')
+                    ->collapsible()
                     ->schema([
                         Select::make('department_id')
                             ->relationship(
@@ -227,9 +233,12 @@ class EmployeeResource extends Resource
             ])
 
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ActionGroup::make([
+
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])
 
             ])
             ->bulkActions([
