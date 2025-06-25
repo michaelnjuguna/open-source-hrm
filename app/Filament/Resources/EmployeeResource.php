@@ -166,7 +166,7 @@ class EmployeeResource extends Resource
             ->columns([
                 //
                 Tables\Columns\TextColumn::make('employee_number')
-                    ->label('Employee Number')
+                    ->label('Employee No.')
                     ->searchable()
                     ->sortable(),
 

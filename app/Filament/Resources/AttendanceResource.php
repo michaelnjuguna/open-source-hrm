@@ -114,7 +114,7 @@ class AttendanceResource extends Resource
             )
             ->columns([
                 Tables\Columns\TextColumn::make('employee.employee_number')
-                    ->label('Employee Number')
+                    ->label('Employee No.')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('employee.full_name')
