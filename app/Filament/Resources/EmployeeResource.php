@@ -5,10 +5,12 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\EmployeeResource\Pages;
 use App\Filament\Resources\EmployeeResource\RelationManagers;
 use App\Models\Employee;
+use App\Models\Position;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -21,6 +23,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Filters\Filter;
+use App\Models\Department;
+use Filament\Forms\Components\Grid;
 
 
 class EmployeeResource extends Resource
@@ -111,8 +115,53 @@ class EmployeeResource extends Resource
                             ->searchable()
                             ->placeholder('Select a department')
                             ->preload()
-                            ->columnSpanFull()
+                            // ->columnSpanFull()
                             ->nullable(),
+                        Select::make('position_id')
+                            ->options(
+                                Position::all()->pluck('title', 'id')
+
+                            )
+                            ->label('Position')
+                            ->searchable()
+                            ->placeholder('Select a position')
+                            ->preload()
+                            ->nullable()
+                            ->createOptionForm([
+                                TextInput::make('title')
+                                    ->required()
+                                    ->label('Position Title'),
+                                Select::make('department_id')
+                                    ->options(
+                                        Department::all()->pluck('name', 'id')
+                                    ),
+                                Grid::make(2)
+                                    ->schema([
+                                        TextInput::make('code')
+                                            ->label('Position Code')
+                                            ->unique(ignoreRecord: true)
+                                            ->nullable(),
+                                        TextInput::make('salary')
+                                            ->label('Salary')
+                                            ->numeric()
+                                            ->nullable(),
+                                    ]),
+                                Textarea::make('description')
+                                    ->label('Description')
+                                    ->nullable()
+                                    ->maxLength(255),
+
+                            ])
+                            ->createOptionUsing(function (array $data) {
+                                return Position::create([
+                                    'title' => $data['title'],
+                                    'department_id' => $data['department_id'],
+                                    'code' => $data['code'] ?? null,
+                                    'salary' => $data['salary'] ?? null,
+                                    'description' => $data['description'] ?? null,
+                                ])->id;
+                            })
+                            ->native(false),
                         Select::make('employment_type')
                             ->options([
                                 'Permanent' => 'Permanent',
@@ -156,7 +205,21 @@ class EmployeeResource extends Resource
                         ->options(
                             fn() => \App\Models\Department::all()->pluck('name', 'id')
                         )
-                        ->searchable()
+                        ->searchable(),
+                    SelectFilter::make('employment_type')
+                        ->label('Employment Type')
+                        ->options([
+                            'Permanent' => 'Permanent',
+                            'Contract' => 'Contract',
+                            'Casual' => 'Casual',
+                        ]),
+                    SelectFilter::make('position_id')
+                        ->label('Position')
+                        ->options(
+                            Position::all()->pluck('title', 'id')
+                        )
+                        ->searchable(),
+
 
 
 
@@ -185,6 +248,11 @@ class EmployeeResource extends Resource
                 Tables\Columns\TextColumn::make('department.name')
                     ->label('Department')
                     ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('position.title')
+                    ->label('Position')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('email')
                     ->label('Email')

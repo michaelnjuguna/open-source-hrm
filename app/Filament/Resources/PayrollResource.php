@@ -24,9 +24,12 @@ use Filament\Tables\Actions\ViewAction;
 class PayrollResource extends Resource
 {
     // TODO: Global search
+    // TODO: Add icons
     protected static ?string $model = Payroll::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+    protected static ?string $activeNavigationIcon = 'heroicon-s-banknotes';
+
     protected static ?string $navigationGroup = 'HR Management';
     protected static ?int $navigationSort = 4;
 

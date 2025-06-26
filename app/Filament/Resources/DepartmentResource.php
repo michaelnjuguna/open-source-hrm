@@ -68,6 +68,7 @@ class DepartmentResource extends Resource
                 Tables\Columns\TextColumn::make('code')
                     ->searchable()
                     ->sortable()
+                    ->limit(10)
                     ->label('Department Code'),
                 Tables\Columns\TextColumn::make('description')
                     ->limit(50)

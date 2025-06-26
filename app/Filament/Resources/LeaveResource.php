@@ -117,6 +117,13 @@ class LeaveResource extends Resource
                 Tables\Columns\TextColumn::make('duration')
                     ->label('Duration(Days)'),
                 Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'Pending' => 'warning',
+                        'Approved' => 'success',
+                        'Rejected' => 'danger',
+                        default => 'secondary',
+                    })
                     ->label('Status')
                 ,
                 Tables\Columns\TextColumn::make('rejection_reason')

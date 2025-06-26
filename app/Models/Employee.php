@@ -25,6 +25,7 @@ class Employee extends Model
         'termination_date',
         'is_active',
         'department_id',
+        'position_id',
         'next_of_kin_name',
         'next_of_kin_relationship',
         'next_of_kin_phone',
@@ -49,5 +50,9 @@ class Employee extends Model
     public function department()
     {
         return $this->belongsTo(Department::class, 'department_id');
+    }
+    public function position()
+    {
+        return $this->belongsTo(Position::class, 'position_id');
     }
 }

@@ -26,6 +26,14 @@ return new class extends Migration {
             $table->enum('marital_status', ['Single', 'Married', 'Divorced', 'Widowed'])->nullable();
             // $table->foreignId('department_id')->nullable()->nullOnDelete();
             // $table->foreignId('position_id')->nullable()->nullOnDelete();
+            $table->foreignId('department_id')
+                ->nullable()
+                ->constrained('departments')
+                ->onDelete('set null');
+            $table->foreignId('position_id')
+                ->nullable()
+                ->constrained('positions')
+                ->onDelete('set null');
             $table->enum('employment_type', ['Permanent', 'Contract', 'Casual']);
             $table->date('hire_date');
             $table->date('termination_date')->nullable();
