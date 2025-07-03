@@ -2,6 +2,10 @@
 
 A modern, Laravel + FilamentPHP-based **Human Resource Management System** tailored for Kenyan businesses. This solution simplifies employee management, payroll (PAYE, NHIF, NSSF), attendance, and more — all in compliance with Kenyan labor laws.
 
+<img src="img.png" alt="Open source HRM" style="max-width: 100%; border-radius: 8px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);" >
+
+---
+
 ## 🔧 Tech Stack
 
 -   **Laravel 12+**
@@ -21,8 +25,10 @@ A modern, Laravel + FilamentPHP-based **Human Resource Management System** tailo
 -   **Departments**
 -   **Attendance**
 -   **Leave**
+-   **Payroll**
+-   **Kanban board**
 -   _More modules coming soon_  
-     (Payroll, Recruitment, Training, etc.)
+     ( Recruitment, Training, etc.)
 
 ## ⚙️ Installation
 
