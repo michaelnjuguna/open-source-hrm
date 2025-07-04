@@ -29,7 +29,7 @@ class Task extends Model
     }
     public function getDateAttribute()
     {
-        return $this->due_date ? $this->due_date->format('Y-m-d') : null;
+        return $this->due_date ? $this->due_date->format('d-M-Y') : null;
     }
 
 }
