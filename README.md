@@ -26,7 +26,7 @@ A modern, Laravel + FilamentPHP-based **Human Resource Management System** tailo
 -   **Attendance**
 -   **Leave**
 -   **Payroll**
--   **Kanban board**
+-   **Tasks board**
 -   _More modules coming soon_  
      ( Recruitment, Training, etc.)
 

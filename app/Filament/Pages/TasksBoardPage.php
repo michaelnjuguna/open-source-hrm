@@ -32,6 +32,8 @@ class TasksBoardPage extends KanbanBoardPage
             ->orderField('sort_order')
             ->columnField('status')
             ->descriptionField('description')
+            ->cardLabel('Task')
+            ->pluralCardLabel('Tasks')
             ->cardAttributes([
                 'employee.full_name' => '',
                 'date' => '',
@@ -83,7 +85,7 @@ class TasksBoardPage extends KanbanBoardPage
                                     ]
                                 )
 
-                                ->label('Employee'),
+                                ->label('Assigned to'),
                             DatePicker::make('due_date')
                                 ->label('Due Date'),
                         ]),
@@ -120,7 +122,7 @@ class TasksBoardPage extends KanbanBoardPage
                                     ]
                                 )
 
-                                ->label('Employee'),
+                                ->label('Assigned to'),
                             DatePicker::make('due_date')
                                 ->label('Due Date'),
                         ]),
