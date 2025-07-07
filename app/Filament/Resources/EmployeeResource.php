@@ -69,8 +69,11 @@ class EmployeeResource extends Resource
                 Section::make('Contact Information')
                     ->collapsible()
                     ->schema([
-                        TextInput::make('email')->email(),
-                        TextInput::make('phone')->tel()->required(),
+                        TextInput::make('email')->email()->required()->label('Email Address (this will be the password for the employee)')
+                            ->unique(ignoreRecord: true)
+
+                        ,
+                        TextInput::make('phone')->tel()->required()->label('Phone Number')->unique(ignoreRecord: true),
                         TextInput::make('national_id')->required()->unique(ignoreRecord: true)
                             ->integer()
                         ,

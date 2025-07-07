@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class Employee extends Model
 {
     //
@@ -30,6 +31,7 @@ class Employee extends Model
         'next_of_kin_relationship',
         'next_of_kin_phone',
         'next_of_kin_email',
+        'password'
     ];
 
     protected $casts = [
@@ -43,6 +45,12 @@ class Employee extends Model
         'full_name',
     ];
 
+    public static function booted()
+    {
+        static::creating(function ($employee) {
+            $employee->password = bcrypt($employee->email);
+        });
+    }
     public function getFullNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";

@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Resources\DepartmentResource\Widgets\StatsOverview;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -11,7 +10,6 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -20,49 +18,28 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-
-
-
-class AdminPanelProvider extends PanelProvider
+class EmployeePanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->spa()
-            // Footer
-            // ->renderHook(
-            //     PanelsRenderHook::FOOTER,
-            //     fn() => view('footer')
-            // )
-            ->default()
-            ->id('admin')
-            ->path('/')
-            ->passwordReset()
-            ->profile()
-            ->login()
-            ->registration()
-
+            ->id('employee')
+            ->path('employee')
             ->colors([
                 'primary' => Color::Sky,
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->login()
+            ->passwordReset()
+            ->profile()
+            ->discoverResources(in: app_path('Filament/Employee/Resources'), for: 'App\\Filament\\Employee\\Resources')
+            ->discoverPages(in: app_path('Filament/Employee/Pages'), for: 'App\\Filament\\Employee\\Pages')
             ->pages([
                 Pages\Dashboard::class,
-                \App\Filament\Pages\TasksBoardPage::class,
-                // App\Filament\Pages\TasksBoardPage::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Employee/Widgets'), for: 'App\\Filament\\Employee\\Widgets')
             ->widgets([
-                    // Widgets\AccountWidget::class,
-                    // Widgets\FilamentInfoWidget::class,
-                StatsOverview::class,
-                \App\Filament\Resources\EmployeeResource\Widgets\StatsOverview::class,
-            ])
-            ->navigationGroups([
-                'Organization',
-                'HR Management',
-                'Project Management',
+                Widgets\AccountWidget::class,
+                Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
