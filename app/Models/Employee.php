@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Model;
-
-
-class Employee extends Model
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+class Employee extends Authenticatable
 {
+    use HasFactory, Notifiable;
     //
     protected $fillable = [
         'employee_number',
@@ -40,16 +43,39 @@ class Employee extends Model
         'termination_date' => 'date',
         'is_active' => 'boolean',
         'department_id' => 'integer',
+        'email_verified_at' => 'datetime',
     ];
     protected $appends = [
         'full_name',
+
     ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    // public function getNameAttribute()
+    // {
+    //     return $this->full_name ?: $this->email ?: 'Employee';
+    // }
+    public function getNameAttribute(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+
 
     public static function booted()
     {
         static::creating(function ($employee) {
             $employee->password = bcrypt($employee->email);
         });
+    }
+
+    public function canAccessPanel(\Filament\Panel $panel): bool
+    {
+        return true;
     }
     public function getFullNameAttribute()
     {
@@ -63,4 +89,5 @@ class Employee extends Model
     {
         return $this->belongsTo(Position::class, 'position_id');
     }
+
 }
