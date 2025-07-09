@@ -40,8 +40,10 @@ class AdminPanelProvider extends PanelProvider
             ->passwordReset()
             ->profile()
             ->login()
-            ->registration()
-
+            // ->registration()
+            ->brandName(
+                'HRM Admin',
+            )
             ->colors([
                 'primary' => Color::Sky,
             ])

@@ -32,7 +32,7 @@ class EmployeePanelProvider extends PanelProvider
             ->passwordReset()
             ->profile()
             ->brandName(
-                'Employee Panel',
+                'Employee Portal',
             )
             ->authGuard('employee')
             ->discoverResources(in: app_path('Filament/Employee/Resources'), for: 'App\\Filament\\Employee\\Resources')
