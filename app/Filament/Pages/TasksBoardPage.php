@@ -18,7 +18,7 @@ class TasksBoardPage extends KanbanBoardPage
     protected static ?string $navigationIcon = 'heroicon-o-view-columns';
     protected static ?string $navigationLabel = 'Tasks Board Page';
     protected static ?string $title = 'Task Board';
-    protected static ?string $navigationGroup = 'Project Management';
+    protected static ?string $navigationGroup = 'Work space';
 
     public function getSubject(): Builder
     {

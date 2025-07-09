@@ -11,6 +11,9 @@ class CreateDepartment extends CreateRecord
     protected static string $resource = DepartmentResource::class;
 
     // TODO: Make departments creation form
-
+    protected function getRedirectUrl(): string
+    {
+        return $this->previousUrl ?? $this->getResource()::getUrl('index');
+    }
 
 }

@@ -62,9 +62,9 @@ class AdminPanelProvider extends PanelProvider
                 \App\Filament\Resources\EmployeeResource\Widgets\StatsOverview::class,
             ])
             ->navigationGroups([
+                'Work space',
                 'Organization',
                 'HR Management',
-                'Project Management',
             ])
             ->middleware([
                 EncryptCookies::class,
