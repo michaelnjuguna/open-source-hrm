@@ -42,7 +42,7 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             // ->registration()
             ->brandName(
-                'HRM Admin',
+                'Admin Panel',
             )
             ->colors([
                 'primary' => Color::Sky,

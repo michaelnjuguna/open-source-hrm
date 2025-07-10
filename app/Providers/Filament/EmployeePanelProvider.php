@@ -23,10 +23,10 @@ class EmployeePanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('employee')
-            ->path('employee')
+            ->id('portal')
+            ->path('portal')
             ->colors([
-                'primary' => Color::Sky,
+                'primary' => Color::Cyan,
             ])
             ->login()
             ->passwordReset()
