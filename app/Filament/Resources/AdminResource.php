@@ -80,7 +80,7 @@ class AdminResource extends Resource
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\ViewAction::make(),
-                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\DeleteAction::make()->hidden(fn ($record)=> auth()->user()->email === $record->email),
                 ])
             ])
             ->bulkActions([
