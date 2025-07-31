@@ -46,7 +46,12 @@ php artisan migrate --seed
 
 composer run dev
 ```
-
+Open your browser and access the application through http://127.0.0.1:8000
+Use the following credentials
+```
+Emial : test@example.com
+Password : password
+```
 ## 🤝 Contributing
 
 All contributions are welcome. Please fork the repo, create a feature branch and submit a pull request.
