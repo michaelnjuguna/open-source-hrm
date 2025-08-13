@@ -11,12 +11,24 @@ class Topic extends Model
     protected $fillable = [
         "subject",
         "creator_id",
-        "receiver_id"
+        "creator_type",
+        "receiver_id",
+        "receiver_type"
     ];
 
     public function creator()
     {
-        return $this->morphTo(Employee::class, ownerKey: 'Employee');
+        return $this->morphTo();
+    }
+
+    public function receiver()
+    {
+        return $this->morphTo();
+    }
+
+    public function message()
+    {
+        return $this->hasMany(Message::class);
     }
     // public function creator()
     // {

@@ -32,6 +32,14 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+    protected $appends = [
+        'full_name',
+    ];
+
+    public function getFullNameAttribute(): string
+    {
+        return $this->name;
+    }
 
     /**
      * Get the attributes that should be cast.

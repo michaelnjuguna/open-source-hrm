@@ -16,10 +16,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\Employee;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Actions\{ActionGroup, DeleteAction, EditAction, ViewAction};
+
 
 class PayrollResource extends Resource
 {
@@ -182,6 +180,7 @@ class PayrollResource extends Resource
                     Tables\Actions\DeleteAction::make(),
                 ]),
             ])
+            ->defaultSort('created_at', 'desc')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
