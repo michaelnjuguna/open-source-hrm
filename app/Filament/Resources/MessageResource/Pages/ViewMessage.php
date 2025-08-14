@@ -22,7 +22,17 @@ class ViewMessage extends ViewRecord
     {
         return 'View Conversation';
     }
+    public function mount($record): void
+    {
+        parent::mount($record);
 
+        Message::where('topic_id', $this->record->id)
+            ->whereNull('read_at')
+            ->where('sender_id', '!=', auth()->id())
+            ->update([
+                'read_at' => now()
+            ]);
+    }
     public function getSubheading(): string
     {
 

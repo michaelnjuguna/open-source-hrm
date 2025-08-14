@@ -15,7 +15,7 @@ class Message extends Model
         'content',
         'read_at'
     ];
-    protected $with = ['Topic'];
+    // protected $with = ['Topic'];
     public function sender()
     {
         return $this->morphTo();
