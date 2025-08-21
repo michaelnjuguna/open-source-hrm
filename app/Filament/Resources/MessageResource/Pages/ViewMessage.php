@@ -13,7 +13,7 @@ use Filament\Infolists;
 use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\{TextEntry, RepeatableEntry, Group, Grid, RichEditor};
 use Filament\Support\Enums\FontWeight;
-// TODO: Can only be viewed by sender, receiver or admin
+
 
 class ViewMessage extends ViewRecord
 {

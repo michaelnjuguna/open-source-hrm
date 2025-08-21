@@ -4,13 +4,15 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\MessageResource\Pages;
 use App\Filament\Resources\MessageResource\RelationManagers;
-use App\Models\{Message, Topic, User, Employee};
 use Filament\Forms\Components\RichEditor;
 use Filament\Support\Enums\FontWeight;
+use App\Models\{Message, Topic, User, Employee};
 use Filament\Tables\Actions\{ViewAction, EditAction, ActionGroup};
 use Filament\Tables\Grouping\Group;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms;
+use Filament\Tables\Filters\Filter;
+
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -109,6 +111,10 @@ class MessageResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->filters([
+                Filter::make('creator_id')
+
+            ])
             ->modifyQueryUsing(function ($query) {
                 $userId = Auth::id();
                 return $query->where(function ($query) use ($userId) {
