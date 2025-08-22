@@ -11,6 +11,7 @@ use Filament\Tables\Actions\{ViewAction, EditAction, ActionGroup};
 use Filament\Tables\Grouping\Group;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms;
+
 use Filament\Tables\Filters\Filter;
 
 use Filament\Forms\Form;
@@ -54,6 +55,7 @@ class MessageResource extends Resource
             })
             ->count();
     }
+
 
 
 
@@ -110,11 +112,10 @@ class MessageResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->filters([
-                Filter::make('creator_id')
 
-            ])
+        return $table
+
+
             ->modifyQueryUsing(function ($query) {
                 $userId = Auth::id();
                 return $query->where(function ($query) use ($userId) {
@@ -160,9 +161,7 @@ class MessageResource extends Resource
                     })
 
             ])
-            ->filters([
-                //
-            ])
+
 
             ->actions([
                 ActionGroup::make([
