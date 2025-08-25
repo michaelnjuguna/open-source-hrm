@@ -11,6 +11,7 @@ use Filament\Tables\Actions\{ViewAction, EditAction, ActionGroup};
 use Filament\Tables\Grouping\Group;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms;
+
 use Filament\Tables\Filters\Filter;
 
 use Filament\Forms\Form;
@@ -46,14 +47,19 @@ class MessageResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         $user = Auth::user();
-        $receiverType = $user instanceof Employee ? Employee::class : User::class;
-        return Message::whereNull('read_at')
+        $receiverType = get_class($user);
+        return Message::where('read_at', null)
+            ->whereNot(function ($q) use ($user) {
+                $q->where('sender_id', $user->id)
+                    ->where('sender_type', get_class($user));
+            })
             ->whereHas('topic', function ($query) use ($user, $receiverType) {
                 $query->where('receiver_id', $user->id)
                     ->where('receiver_type', $receiverType);
             })
             ->count();
     }
+
 
 
 
@@ -110,11 +116,10 @@ class MessageResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->filters([
-                Filter::make('creator_id')
 
-            ])
+        return $table
+
+
             ->modifyQueryUsing(function ($query) {
                 $userId = Auth::id();
                 return $query->where(function ($query) use ($userId) {
@@ -160,9 +165,7 @@ class MessageResource extends Resource
                     })
 
             ])
-            ->filters([
-                //
-            ])
+
 
             ->actions([
                 ActionGroup::make([
