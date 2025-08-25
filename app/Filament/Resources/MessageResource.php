@@ -4,12 +4,16 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\MessageResource\Pages;
 use App\Filament\Resources\MessageResource\RelationManagers;
-use App\Models\{Message, Topic, User, Employee};
 use Filament\Forms\Components\RichEditor;
+use Filament\Support\Enums\FontWeight;
+use App\Models\{Message, Topic, User, Employee};
 use Filament\Tables\Actions\{ViewAction, EditAction, ActionGroup};
 use Filament\Tables\Grouping\Group;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms;
+
+use Filament\Tables\Filters\Filter;
+
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -25,7 +29,7 @@ use Filament\Tables\Table;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
+// TODO: Filters for sent and received messages
 class MessageResource extends Resource
 {
     protected static ?string $model = Topic::class;
@@ -38,17 +42,24 @@ class MessageResource extends Resource
     protected static ?string $pluralModelLabel = 'Messages';
 
     protected static ?string $navigationGroup = 'Work space';
-    protected static ?string $navigationBadgeTooltip = 'The number of unread messages';
+    protected static ?string $navigationBadgeTooltip = 'Unread messages';
 
     public static function getNavigationBadge(): ?string
     {
-        return (string) Topic::where('receiver_id', Auth::id())
-            ->where('receiver_type', Auth::user() instanceof \App\Models\Employee ? \App\Models\Employee::class : \App\Models\User::class)
-            ->whereHas('message', function ($query) {
-                $query->whereNull('read_at');
+        $user = Auth::user();
+        $receiverType = get_class($user);
+        return Message::where('read_at', null)
+            ->whereNot(function ($q) use ($user) {
+                $q->where('sender_id', $user->id)
+                    ->where('sender_type', get_class($user));
+            })
+            ->whereHas('topic', function ($query) use ($user, $receiverType) {
+                $query->where('receiver_id', $user->id)
+                    ->where('receiver_type', $receiverType);
             })
             ->count();
     }
+
 
 
 
@@ -70,15 +81,15 @@ class MessageResource extends Resource
                     ->options(
                         collect()
                             ->merge(
-                                Employee::all()->map(fn($employee) => [
-                                    $employee->id => 'Employee: ' . $employee->name,
-                                    Employee::class
+                                Employee::all()->mapWithKeys(fn($employee) => [
+                                    'Employee_' . $employee->id => 'Employee: ' . $employee->name
+
                                 ])
                             )
                             ->merge(
-                                User::all()->map(fn($user) => [
-                                    $user->id => 'Admin: ' . $user->name,
-                                    User::class
+                                User::all()->mapWithKeys(fn($user) => [
+                                    'User_' . $user->id => 'Admin: ' . $user->name
+
                                 ])
                             )
 
@@ -105,26 +116,57 @@ class MessageResource extends Resource
 
     public static function table(Table $table): Table
     {
+
         return $table
+
+
+            ->modifyQueryUsing(function ($query) {
+                $userId = Auth::id();
+                return $query->where(function ($query) use ($userId) {
+                    $query->where('creator_id', $userId)->orWhere('receiver_id', $userId);
+                });
+            })
             ->columns([
                 //
                 TextColumn::make('creator.name')
                     ->sortable()
                     ->searchable()
-                    ->label('Sender'),
+                    ->label('Sender')
+                    ->weight(function ($record) {
+                        return $record->message()->whereNull('read_at')->exists() ? FontWeight::Bold : FontWeight::Light;
+                    })
+                    ->color(function ($record) {
+                        return $record->message()->whereNull('read_at')->exists() ? 'light' : 'gray';
+                    })
+                ,
                 TextColumn::make('subject')
                     ->label('Subject')
                     ->searchable()
-                    ->limit(20),
+                    ->limit(20)
+                    ->color(color: function ($record) {
+                        return $record->message()->whereNull('read_at')->exists() ? 'light' : 'gray';
+                    })
+                    ->weight(function ($record) {
+                        return $record->message()->whereNull('read_at')->exists() ? FontWeight::Bold : FontWeight::Light;
+                    })
+                // ->extraAttributes(function ($record) {
+                //     return $record->message()->whereNull('read_at')->exists() ? ['class' => 'font-bold text-blue-500'] : [];
+                // })
+                ,
                 TextColumn::make('created_at')
                     ->label('Created at')
                     // ->formatStateUsing(fn($state) =>$state->format('d-m-Y H:i A') . '(' $state->diffForHumans() .')')
                     ->formatStateUsing(fn($state) => $state->format('D, M-d-Y H:i A'))
+                    ->weight(function ($record) {
+                        return $record->message()->whereNull('read_at')->exists() ? FontWeight::Bold : FontWeight::Light;
+                    })
+                    ->color(function ($record) {
+                        return $record->message()->whereNull('read_at')->exists() ? 'light' : 'gray';
+                    })
 
             ])
-            ->filters([
-                //
-            ])
+
+
             ->actions([
                 ActionGroup::make([
 

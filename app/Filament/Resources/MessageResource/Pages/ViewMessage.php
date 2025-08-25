@@ -13,7 +13,7 @@ use Filament\Infolists;
 use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\{TextEntry, RepeatableEntry, Group, Grid, RichEditor};
 use Filament\Support\Enums\FontWeight;
-// TODO: Can only be viewed by sender, receiver or admin
+
 
 class ViewMessage extends ViewRecord
 {
@@ -22,7 +22,17 @@ class ViewMessage extends ViewRecord
     {
         return 'View Conversation';
     }
+    public function mount($record): void
+    {
+        parent::mount($record);
 
+        Message::where('topic_id', $this->record->id)
+            ->whereNull('read_at')
+            ->where('sender_id', '!=', auth()->id())
+            ->update([
+                'read_at' => now()
+            ]);
+    }
     public function getSubheading(): string
     {
 

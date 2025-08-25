@@ -8,12 +8,14 @@ use App\Filament\Resources\AdminResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+
 
 class AdminResource extends Resource
 {
@@ -80,12 +82,22 @@ class AdminResource extends Resource
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\ViewAction::make(),
-                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\DeleteAction::make()
+                        ->hidden(fn($record) => auth()->id() === $record->id)
+                    ,
                 ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->before(function ($action, $records) {
+                            if ($records->contains(fn($record) => $record->id === auth()->id())) {
+                                Notification::make()->title('You cannot delete your own account, try again')
+                                    ->warning()->send();
+                                $action->cancel();
+                            }
+                        })
+                    ,
                 ]),
             ]);
     }
