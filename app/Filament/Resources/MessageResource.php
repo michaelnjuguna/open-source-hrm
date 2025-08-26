@@ -47,17 +47,37 @@ class MessageResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         $user = Auth::user();
+        if (!$user) {
+            return null; // Return null if no user is authenticated
+        }
+
         $receiverType = get_class($user);
-        return Message::where('read_at', null)
-            ->whereNot(function ($q) use ($user) {
-                $q->where('sender_id', $user->id)
-                    ->where('sender_type', get_class($user));
-            })
-            ->whereHas('topic', function ($query) use ($user, $receiverType) {
-                $query->where('receiver_id', $user->id)
-                    ->where('receiver_type', $receiverType);
+
+        $unreadCount = Message::where('read_at', null)
+            ->join('topics', 'messages.topic_id', '=', 'topics.id')
+            ->where(function ($query) use ($user, $receiverType) {
+                // Case 1: User is the receiver of the topic
+                $query->where(function ($q) use ($user, $receiverType) {
+                    $q->where('topics.receiver_id', $user->id)
+                        ->where('topics.receiver_type', $receiverType)
+                        ->whereNot(function ($q2) use ($user) {
+                            $q2->where('messages.sender_id', $user->id)
+                                ->where('messages.sender_type', get_class($user));
+                        });
+                })
+                    // Case 2: User is the sender of the topic
+                    ->orWhere(function ($q) use ($user, $receiverType) {
+                    $q->where('topics.creator_id', $user->id)
+                        ->where('topics.creator_type', $receiverType)
+                        ->whereNot(function ($q2) use ($user) {
+                            $q2->where('messages.sender_id', $user->id)
+                                ->where('messages.sender_type', get_class($user));
+                        });
+                });
             })
             ->count();
+
+        return $unreadCount > 0 ? (string) $unreadCount : null;
     }
 
 

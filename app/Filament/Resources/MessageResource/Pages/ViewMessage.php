@@ -5,7 +5,7 @@ namespace App\Filament\Resources\MessageResource\Pages;
 use App\Filament\Resources\MessageResource;
 use Filament\Actions\{CreateAction, Action as FAction};
 use Filament\Infolists\Components\Actions;
-use Filament\Infolists\Components\Actions\Action;
+use Filament\Infolists\Components\Actions\{Action};
 use Filament\Resources\Pages\ViewRecord;
 use App\Models\{Topic, Message};
 use Filament\Forms\Components\{RichEditor as FRichEditor};
@@ -83,6 +83,9 @@ class ViewMessage extends ViewRecord
                             ->formatStateUsing(
                                 fn($state) => $state->format('D, M-d-Y H:i A ') . '(' . $state->diffForHumans() . ')'
                             ),
+                        // Action::make('delete')
+                        //     ->icon('heroicon-s-trash')
+
                     ]),
                     TextEntry::make('content')->label('')->html()
 
