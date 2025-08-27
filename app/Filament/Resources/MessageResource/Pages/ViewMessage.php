@@ -6,6 +6,7 @@ use App\Filament\Resources\MessageResource;
 use Filament\Actions\{CreateAction, Action as FAction};
 use Filament\Infolists\Components\Actions;
 use Filament\Infolists\Components\Actions\{Action};
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use App\Models\{Topic, Message};
 use Filament\Forms\Components\{RichEditor as FRichEditor};
@@ -42,6 +43,28 @@ class ViewMessage extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            FAction::make('MarkUnread')->label('Mark as unread')
+                ->color('gray')
+                ->action(function () {
+                    Message::where('topic_id', $this->record->id)
+                        // ->where('receiver_id', auth()->id())
+                        ->update(['read_at' => null]);
+                    Notification::make()
+                        ->title('Messages marked as unread')
+                        ->success()
+                        ->send();
+
+                    return $this->redirect(MessageResource::getUrl('index'));
+
+                })
+                ->visible(
+                    fn() =>
+                    $this->record->receiver_id === auth()->id()
+                    && $this->record->receiver_type === auth()->user()->getMorphClass()
+                )
+
+
+            ,
             FAction::make('Reply')->label('Reply')
                 ->form([
                     FRichEditor::make('content')
@@ -58,7 +81,7 @@ class ViewMessage extends ViewRecord
                         'sender_id' => auth()->id(),
                         'content' => $data['content'],
                     ]);
-                })
+                }),
         ];
     }
 
@@ -70,23 +93,41 @@ class ViewMessage extends ViewRecord
             RepeatableEntry::make('message')
                 ->label('')
                 ->schema([
-                    Grid::make(2)->schema([
-                        TextEntry::make('sender.name')
-                            ->label('')
-                            ->weight(FontWeight::Bold)
+                    Grid::make(5)
 
-                            ->icon('heroicon-s-user-circle')
+                        ->schema([
+                            TextEntry::make('sender.name')
+                                ->label('')
+                                ->weight(FontWeight::Bold)
 
-                        ,
-                        TextEntry::make('created_at')
-                            ->label('')
-                            ->formatStateUsing(
-                                fn($state) => $state->format('D, M-d-Y H:i A ') . '(' . $state->diffForHumans() . ')'
-                            ),
-                        // Action::make('delete')
-                        //     ->icon('heroicon-s-trash')
+                                ->icon('heroicon-s-user-circle')
+                                ->columnSpan(2)
+                            ,
+                            TextEntry::make('created_at')
+                                ->label('')
+                                ->columnSpan(2)
 
-                    ]),
+                                ->formatStateUsing(
+                                    fn($state) => $state->format('D, M-d-Y H:i A ') . '(' . $state->diffForHumans() . ')'
+                                ),
+                            Actions::make([
+                                Action::make('delete')
+                                    ->icon('heroicon-o-trash')
+                                    ->color('danger')
+                                    ->label('')
+                                    ->requiresConfirmation()
+                                    ->tooltip('Delete')
+                                    ->iconButton(),
+                                Action::make('edit')
+                                    ->iconButton()
+                                    ->label('')
+                                    ->icon('heroicon-o-pencil-square')
+                                    ->color('gray')
+                                    ->tooltip('Edit')
+                            ])->alignEnd()->columnSpan(1)
+
+
+                        ]),
                     TextEntry::make('content')->label('')->html()
 
                 ])->columnSpanFull(),
@@ -104,7 +145,8 @@ class ViewMessage extends ViewRecord
                             'sender_id' => auth()->id(),
                             'content' => $data['content'],
                         ]);
-                    })
+                    }),
+
             ])
         ]);
     }
