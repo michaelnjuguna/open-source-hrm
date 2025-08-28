@@ -111,12 +111,28 @@ class ViewMessage extends ViewRecord
                                     fn($state) => $state->format('D, M-d-Y H:i A ') . '(' . $state->diffForHumans() . ')'
                                 ),
                             Actions::make([
+                                // ! BUG
                                 Action::make('delete')
+                                    ->action(function ($recordKey) {
+                                        $message = $this->record->message()->find($recordKey);
+                                        if ($message) {
+                                            $message->query()->delete();
+                                            Notification::make()
+                                                ->title('Message deleted')
+                                                ->success()
+                                                ->send();
+                                        }
+                                    })
                                     ->icon('heroicon-o-trash')
                                     ->color('danger')
                                     ->label('')
                                     ->requiresConfirmation()
                                     ->tooltip('Delete')
+                                    ->modalHeading('Confirm deletion')
+                                    ->modalSubheading('Are you sure you want to delete this message?')
+                                    ->modalButton('Yes, Delete')
+                                    ->modalIconColor('danger')
+                                    ->modalIcon('heroicon-o-trash')
                                     ->iconButton(),
                                 Action::make('edit')
                                     ->iconButton()
