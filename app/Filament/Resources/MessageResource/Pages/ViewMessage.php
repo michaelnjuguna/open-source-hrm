@@ -4,6 +4,7 @@ namespace App\Filament\Resources\MessageResource\Pages;
 
 use App\Filament\Resources\MessageResource;
 use Filament\Actions\{CreateAction, Action as FAction};
+use Filament\Forms\Form;
 use Filament\Infolists\Components\Actions;
 use Filament\Infolists\Components\Actions\{Action};
 use Filament\Notifications\Notification;
@@ -131,6 +132,27 @@ class ViewMessage extends ViewRecord
                                     ->modalIcon('heroicon-o-trash')
                                     ->iconButton(),
                                 Action::make('edit')
+                                    ->form([
+                                        FRichEditor::make('content')
+                                            ->required()
+
+                                    ])
+                                    ->mountUsing(function (Form $form, $record) {
+                                        $form->fill([
+                                            'content' => $record->content,
+                                        ]);
+                                    })
+                                    ->action(function (array $data, $record) {
+                                        $record->update([
+                                            'content' => $data['content']
+                                        ]);
+                                        Notification::make()
+                                            ->title('Message updated successfully')
+                                            ->success()
+                                            ->send();
+                                    })
+                                    ->modalButton('Save Changes')
+                                    ->modalHeading('Edit Content')
                                     ->iconButton()
                                     ->label('')
                                     ->icon('heroicon-o-pencil-square')
