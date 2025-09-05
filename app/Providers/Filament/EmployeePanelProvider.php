@@ -28,6 +28,7 @@ class EmployeePanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Cyan,
             ])
+            ->spa()
             ->login()
             ->passwordReset()
             ->profile()

@@ -34,7 +34,7 @@ class CreateMessage extends CreateRecord
                 'receiver_type' => $receiverType,
                 'receiver_id' => $actualId,
             ]);
-            // TODO: Create messages
+
             $data['topic_id'] = $topic->id;
             $data['sender_type'] = auth()->user() instanceof Employee ? Employee::class : User::class;
             $data['sender_id'] = auth()->id();
