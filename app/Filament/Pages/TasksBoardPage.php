@@ -35,16 +35,16 @@ class TasksBoardPage extends KanbanBoardPage
             ->cardLabel('Task')
             ->pluralCardLabel('Tasks')
             ->cardAttributes([
-                'employee.full_name' => '',
+                'employee.email' => '',
                 'date' => '',
             ])
             ->cardAttributeColors([
-                'employee.full_name' => 'white',
+                'employee.email' => 'white',
                 'due_date' => 'gray',
             ])
 
             ->cardAttributeIcons([
-                'employee.full_name' => 'heroicon-o-user',
+                'employee.email' => 'heroicon-o-user',
                 'date' => 'heroicon-o-calendar',
             ])
             ->columns([
@@ -76,12 +76,13 @@ class TasksBoardPage extends KanbanBoardPage
                         ->schema([
                             Select::make('employee_id')
                                 ->options(function () {
-                                    return Employee::all()->pluck('full_name', 'id');
+                                    return Employee::all()->pluck('email', 'id');
                                 })
                                 ->searchable(
                                     [
                                         'first_name',
                                         'last_name',
+                                        'email'
                                     ]
                                 )
 
@@ -113,12 +114,13 @@ class TasksBoardPage extends KanbanBoardPage
                         ->schema([
                             Select::make('employee_id')
                                 ->options(function () {
-                                    return Employee::all()->pluck('full_name', 'id');
+                                    return Employee::all()->pluck('email', 'id');
                                 })
                                 ->searchable(
                                     [
                                         'first_name',
                                         'last_name',
+                                        'email'
                                     ]
                                 )
 
