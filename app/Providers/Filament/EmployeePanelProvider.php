@@ -17,6 +17,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Filament\Resources\MessageResource;
 
 class EmployeePanelProvider extends PanelProvider
 {
@@ -33,8 +34,9 @@ class EmployeePanelProvider extends PanelProvider
             ->passwordReset()
             ->profile()
             ->brandName(
-                'Employee Portal',
+                'Portal',
             )
+
             ->authGuard('employee')
             ->discoverResources(in: app_path('Filament/Employee/Resources'), for: 'App\\Filament\\Employee\\Resources')
             ->discoverPages(in: app_path('Filament/Employee/Pages'), for: 'App\\Filament\\Employee\\Pages')
@@ -42,11 +44,15 @@ class EmployeePanelProvider extends PanelProvider
                 Pages\Dashboard::class,
                 \App\Filament\Pages\TasksBoardPage::class,
             ])
+            ->resources([
+                MessageResource::class
+            ])
             ->discoverWidgets(in: app_path('Filament/Employee/Widgets'), for: 'App\\Filament\\Employee\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])
+
             ->navigationGroups([
                 'Work space'
             ])
