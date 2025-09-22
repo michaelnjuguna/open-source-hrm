@@ -7,7 +7,7 @@ use App\Filament\Resources\MessageResource\RelationManagers;
 use Filament\Forms\Components\RichEditor;
 use Filament\Support\Enums\FontWeight;
 use App\Models\{Message, Topic, User, Employee};
-use Filament\Tables\Actions\{ViewAction, EditAction, ActionGroup};
+use Filament\Tables\Actions\{ViewAction, EditAction, ActionGroup, DeleteAction};
 use Filament\Tables\Grouping\Group;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms;
@@ -23,7 +23,7 @@ use Filament\Tables\Table;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-// TODO: Filters for sent and received messages
+
 class MessageResource extends Resource
 {
     protected static ?string $model = Topic::class;
@@ -257,7 +257,10 @@ class MessageResource extends Resource
                             ]);
                         })
                     ,
-                    ViewAction::make()
+                    ViewAction::make(),
+                    DeleteAction::make(
+
+                    )
                 ]),
             ])
             ->bulkActions([
