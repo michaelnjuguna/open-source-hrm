@@ -212,51 +212,52 @@ class MessageResource extends Resource
 
             ->actions([
                 ActionGroup::make([
-                    EditAction::make()
-                        ->modalHeading('Edit topic')
-                        ->form(
-                            [
-                                TextInput::make("Subject")
+                    // EditAction::make()
+                    //     ->modalHeading('Edit topic')
+                    //     ->form(
+                    //         [
+                    //             TextInput::make("subject")
+                    //                 ->required()
+                    //                 ->maxLength(255)
+                    //                 ->columnSpanFull()
+                    //                 ->label("Subject"),
+                    //             Select::make("receiver_id")
+                    //                 ->label("receiver")
+                    //                 ->required()
+                    //                 ->multiple()
 
-
-                                    ->required()
-                                    ->maxLength(255)
-                                    ->columnSpanFull()
-                                    ->label("Subject"),
-                                Select::make("receiver_id")
-                                    ->label("receiver")
-                                    ->required()
-                                    ->multiple()
-
-                                    ->options(
-                                        collect()
-                                            ->merge(
-                                                Employee::all()->mapWithKeys(
-                                                    fn($employee) => [
-                                                        "Employee_" . $employee->id =>
-                                                            $employee->email
-                                                    ],
-                                                ),
-                                            )
-                                            ->merge(
-                                                User::all()->mapWithKeys(
-                                                    fn($user) => [
-                                                        "User_" . $user->id =>
-                                                            $user->email
-                                                    ],
-                                                ),
-                                            ),
-                                    )
-                                    ->columnSpanFull()
-                                    ->searchable(["first_name", "last_name"]),
-                            ]
-                        )
-                        ->mountUsing(function (Form $form, $record) {
-                            $form->fill([
-                                'subject' => $record->subject
-                            ]);
-                        })
-                    ,
+                    //                 ->options(
+                    //                     collect()
+                    //                         ->merge(
+                    //                             Employee::all()->mapWithKeys(
+                    //                                 fn($employee) => [
+                    //                                     "Employee_" . $employee->id =>
+                    //                                         $employee->email
+                    //                                 ],
+                    //                             ),
+                    //                         )
+                    //                         ->merge(
+                    //                             User::all()->mapWithKeys(
+                    //                                 fn($user) => [
+                    //                                     "User_" . $user->id =>
+                    //                                         $user->email
+                    //                                 ],
+                    //                             ),
+                    //                         ),
+                    //                 )
+                    //                 ->columnSpanFull()
+                    //                 ->searchable(["first_name", "last_name"]),
+                    //         ]
+                    //     )
+                    //     ->fillForm(
+                    //         fn($record) => [
+                    //             'subject' => $record->subject,
+                    //             'receiver_id' => $record->receiver_type === 'employee'
+                    //                 ? "Employee_" . $record->receiver_id
+                    //                 : "User_" . $record->receiver_id,
+                    //         ]
+                    //     )
+                    // ,
                     ViewAction::make(),
                     DeleteAction::make(
 

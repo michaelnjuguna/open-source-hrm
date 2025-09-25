@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\MessageResource\Pages;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\MessageResource;
+use App\Filament\Resources\{MessageResource};
 use App\Models\{Employee, User};
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
@@ -23,13 +23,15 @@ class ListMessages extends ListRecords
             ,
             'Sent' => Tab::make()
                 ->modifyQueryUsing(
-                    fn(Builder $query) => $query->where('creator_type', $type)
+                    fn(Builder $query) => $query
                         ->where('creator_id', $user->id)
+                        ->where('creator_type', $type)
                 ),
             'Received' => Tab::make()
                 ->modifyQueryUsing(
-                    fn(Builder $query) => $query->where('receiver_type', $type)
+                    fn(Builder $query) => $query
                         ->where('receiver_id', $user->id)
+                        ->where('receiver_type', $type)
                 )
         ];
     }
