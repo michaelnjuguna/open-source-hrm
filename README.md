@@ -27,7 +27,7 @@ A modern, Laravel + FilamentPHP-based **Human Resource Management System** tailo
 -   **Leave**
 -   **Payroll**
 -   **Tasks board**
--   **Employee portal**
+-   **Employee portal** (/portal)
 -   _More modules coming soon_  
      ( Recruitment, Training, etc.)
 
@@ -50,6 +50,8 @@ composer run dev
 ## 🤝 Contributing
 
 All contributions are welcome. Please fork the repo, create a feature branch and submit a pull request.
+
+This project is actively maintained. All changes and new features are merged into the `main` branch every Friday. Contributors are encouraged to submit pull requests for review before this weekly merge.
 
 ## 📜 License
 
