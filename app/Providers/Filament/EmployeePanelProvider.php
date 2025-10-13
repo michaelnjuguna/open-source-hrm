@@ -2,6 +2,10 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Pages\Dashboard;
+use App\Filament\Pages\TasksBoardPage;
+use Filament\Widgets\AccountWidget;
+use Filament\Widgets\FilamentInfoWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -41,16 +45,16 @@ class EmployeePanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Employee/Resources'), for: 'App\\Filament\\Employee\\Resources')
             ->discoverPages(in: app_path('Filament/Employee/Pages'), for: 'App\\Filament\\Employee\\Pages')
             ->pages([
-                Pages\Dashboard::class,
-                \App\Filament\Pages\TasksBoardPage::class,
+                Dashboard::class,
+                // TasksBoardPage::class,
             ])
             ->resources([
                 MessageResource::class
             ])
             ->discoverWidgets(in: app_path('Filament/Employee/Widgets'), for: 'App\\Filament\\Employee\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                AccountWidget::class,
+                FilamentInfoWidget::class,
             ])
 
             ->navigationGroups([

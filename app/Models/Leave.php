@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Leave extends Model
@@ -30,8 +31,8 @@ class Leave extends Model
 
     public function getDurationAttribute()
     {
-        $start = \Carbon\Carbon::parse($this->start_date);
-        $end = \Carbon\Carbon::parse($this->end_date);
+        $start = Carbon::parse($this->start_date);
+        $end = Carbon::parse($this->end_date);
         return $start->diffInDays($end);
     }
 

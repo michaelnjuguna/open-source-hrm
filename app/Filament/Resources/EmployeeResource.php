@@ -2,18 +2,30 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Grid;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\EmployeeResource\Pages\ListEmployees;
+use App\Filament\Resources\EmployeeResource\Pages\ViewEmployee;
+use App\Filament\Resources\EmployeeResource\Pages\EditEmployee;
 use App\Filament\Resources\EmployeeResource\Pages;
 use App\Filament\Resources\EmployeeResource\RelationManagers;
 use App\Models\Employee;
 use App\Models\Position;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
@@ -24,21 +36,20 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Filters\Filter;
 use App\Models\Department;
-use Filament\Forms\Components\Grid;
 
 
 class EmployeeResource extends Resource
 {
     protected static ?string $model = Employee::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
-    protected static ?string $navigationGroup = 'HR Management';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
+    protected static string | \UnitEnum | null $navigationGroup = 'HR Management';
     protected static ?int $navigationSort = 1;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 //
                 Section::make('Basic Information')
                     ->collapsible()
@@ -206,7 +217,7 @@ class EmployeeResource extends Resource
                     SelectFilter::make('department_id')
                         ->label('Department')
                         ->options(
-                            fn() => \App\Models\Department::all()->pluck('name', 'id')
+                            fn() => Department::all()->pluck('name', 'id')
                         )
                         ->searchable(),
                     SelectFilter::make('employment_type')
@@ -231,12 +242,12 @@ class EmployeeResource extends Resource
             )
             ->columns([
                 //
-                Tables\Columns\TextColumn::make('employee_number')
+                TextColumn::make('employee_number')
                     ->label('Employee No.')
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('full_name')
+                TextColumn::make('full_name')
                     ->label('Name')
                     ->searchable(
                         [
@@ -248,54 +259,54 @@ class EmployeeResource extends Resource
                         'first_name',
                         'last_name'
                     ]),
-                Tables\Columns\TextColumn::make('department.name')
+                TextColumn::make('department.name')
                     ->label('Department')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('position.title')
+                TextColumn::make('position.title')
                     ->label('Position')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->label('Email')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('phone')
+                TextColumn::make('phone')
                     ->label('Phone')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('national_id')
+                TextColumn::make('national_id')
                     ->label('National ID')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('kra_pin')
+                TextColumn::make('kra_pin')
                     ->label('KRA PIN')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('employment_type')
+                TextColumn::make('employment_type')
                     ->label('Employment Type')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
-                Tables\Columns\ToggleColumn::make('is_active')
+                ToggleColumn::make('is_active')
                     ->label('Is Active')
 
                     ->toggleable(isToggledHiddenByDefault: false)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('date_of_birth')
+                TextColumn::make('date_of_birth')
                     ->label('Date of Birth')
                     ->date()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('termination_date')
+                TextColumn::make('termination_date')
                     ->label('Termination Date')
                     ->date()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('hire_date')
+                TextColumn::make('hire_date')
                     ->label('Hire Date')
                     ->date()
                     ->toggleable(isToggledHiddenByDefault: true)
@@ -303,18 +314,18 @@ class EmployeeResource extends Resource
 
             ])
 
-            ->actions([
-                Tables\Actions\ActionGroup::make([
+            ->recordActions([
+                ActionGroup::make([
 
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\DeleteAction::make(),
+                    EditAction::make(),
+                    ViewAction::make(),
+                    DeleteAction::make(),
                 ])
 
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -329,10 +340,10 @@ class EmployeeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListEmployees::route('/'),
-            'view' => Pages\ViewEmployee::route('/{record}'),
+            'index' => ListEmployees::route('/'),
+            'view' => ViewEmployee::route('/{record}'),
             // 'create' => Pages\CreateEmployee::route('/create'),
-            'edit' => Pages\EditEmployee::route('/{record}/edit'),
+            'edit' => EditEmployee::route('/{record}/edit'),
         ];
     }
 }

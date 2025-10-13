@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Employee;
 use App\Models\Shift;
@@ -46,8 +47,8 @@ class Attendance extends Model
     public function getHoursAttribute()
     {
         if ($this->clock_in && $this->clock_out) {
-            $start = \Carbon\Carbon::parse($this->clock_in);
-            $end = \Carbon\Carbon::parse($this->clock_out);
+            $start = Carbon::parse($this->clock_in);
+            $end = Carbon::parse($this->clock_out);
             return $start->diffInHours($end, false) + ($start->diffInMinutes($end, false) % 60) / 60;
         }
         return null;

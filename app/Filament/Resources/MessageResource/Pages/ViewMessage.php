@@ -2,17 +2,16 @@
 
 namespace App\Filament\Resources\MessageResource\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Actions;
 use App\Filament\Resources\MessageResource;
 use Filament\Actions\{CreateAction, Action as FAction};
-use Filament\Forms\Form;
-use Filament\Infolists\Components\Actions;
 use Filament\Infolists\Components\Actions\{Action};
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use App\Models\{Topic, Message};
 use Filament\Forms\Components\{RichEditor as FRichEditor};
 use Filament\Infolists;
-use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\{TextEntry, RepeatableEntry, Group, Grid, RichEditor};
 use Filament\Support\Enums\FontWeight;
 
@@ -67,7 +66,7 @@ class ViewMessage extends ViewRecord
 
             ,
             FAction::make('Reply')->label('Reply')
-                ->form([
+                ->schema([
                     FRichEditor::make('content')
                         ->required()
                 ])
@@ -88,13 +87,13 @@ class ViewMessage extends ViewRecord
 
 
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $schema): Schema
     {
         return $infolist->schema([
             RepeatableEntry::make('message')
                 ->label('')
                 ->schema([
-                    Grid::make(5)
+                    \Filament\Schemas\Components\Grid::make(5)
 
                         ->schema([
                             TextEntry::make('sender.name')
@@ -112,7 +111,7 @@ class ViewMessage extends ViewRecord
                                     fn($state) => $state->format('D, M-d-Y H:i A ') . '(' . $state->diffForHumans() . ')'
                                 ),
                             Actions::make([
-                                Action::make('delete')
+                                FAction::make('delete')
                                     ->action(function ($record) {
                                         Message::destroy($record->id);
                                         Notification::make()
@@ -131,14 +130,14 @@ class ViewMessage extends ViewRecord
                                     ->modalIconColor('danger')
                                     ->modalIcon('heroicon-o-trash')
                                     ->iconButton(),
-                                Action::make('edit')
-                                    ->form([
+                                FAction::make('edit')
+                                    ->schema([
                                         FRichEditor::make('content')
                                             ->required()
 
                                     ])
-                                    ->mountUsing(function (Form $form, $record) {
-                                        $form->fill([
+                                    ->mountUsing(function (Schema $schema, $record) {
+                                        $schema->fill([
                                             'content' => $record->content,
                                         ]);
                                     })
@@ -166,9 +165,9 @@ class ViewMessage extends ViewRecord
 
                 ])->columnSpanFull(),
             Actions::make([
-                Action::make('CreateAction')
+                FAction::make('CreateAction')
                     ->label('Reply')
-                    ->form([
+                    ->schema([
                         FRichEditor::make('content')
                             ->required()
                     ])

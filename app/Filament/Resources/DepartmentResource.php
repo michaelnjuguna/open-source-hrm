@@ -2,11 +2,23 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Select;
+use App\Models\Employee;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\DepartmentResource\Pages\ListDepartments;
 use App\Filament\Resources\DepartmentResource\Pages;
 use App\Filament\Resources\DepartmentResource\RelationManagers;
 use App\Models\Department;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -17,30 +29,30 @@ class DepartmentResource extends Resource
 {
     protected static ?string $model = Department::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-group';
-    protected static ?string $navigationGroup = 'Organization';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-group';
+    protected static string | \UnitEnum | null $navigationGroup = 'Organization';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 //
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255)
                     ->label('Department Name')
                     ->placeholder('Enter department name'),
-                Forms\Components\TextInput::make('code')
+                TextInput::make('code')
                     ->maxLength(50)
                     ->label('Department Code')
                     ->placeholder('Enter department code'),
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
                     ->maxLength(500)
                     ->label('Description')
                     ->placeholder('Enter department description'),
-                Forms\Components\Select::make('manager_id')
+                Select::make('manager_id')
                     ->options(function () {
-                        return \App\Models\Employee::all()->pluck('full_name', 'id');
+                        return Employee::all()->pluck('full_name', 'id');
                     })
                     ->label('Manager')
                     ->searchable(
@@ -62,18 +74,18 @@ class DepartmentResource extends Resource
             )
             ->columns([
                 //
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('code')
+                TextColumn::make('code')
                     ->searchable()
                     ->sortable()
                     ->limit(10)
                     ->label('Department Code'),
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->limit(50)
                     ->label('Description'),
-                Tables\Columns\TextColumn::make('manager_id')
+                TextColumn::make('manager_id')
                     ->formatStateUsing(fn($record) => $record->manager?->full_name ?? 'No Manager')
                     ->label('Manager')
                     ->searchable()
@@ -83,17 +95,17 @@ class DepartmentResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ActionGroup::make([
+            ->recordActions([
+                ActionGroup::make([
 
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\DeleteAction::make(),
+                    EditAction::make(),
+                    ViewAction::make(),
+                    DeleteAction::make(),
                 ])
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -108,7 +120,7 @@ class DepartmentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDepartments::route('/'),
+            'index' => ListDepartments::route('/'),
             // 'create' => Pages\CreateDepartment::route('/create'),
             // 'edit' => Pages\EditDepartment::route('/{record}/edit'),
         ];

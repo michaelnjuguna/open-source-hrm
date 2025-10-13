@@ -2,13 +2,22 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\Filter;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\PayrollResource\Pages\ListPayrolls;
 use App\Filament\Resources\PayrollResource\Pages;
 use App\Filament\Resources\PayrollResource\RelationManagers;
 use App\Models\Payroll;
 // use Filament\Actions\ActionGroup;
 use Filament\Forms;
 use Filament\Forms\Components\KeyValue;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -25,18 +34,18 @@ class PayrollResource extends Resource
     // TODO: Add icons
     protected static ?string $model = Payroll::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
-    protected static ?string $activeNavigationIcon = 'heroicon-s-banknotes';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-banknotes';
+    protected static string | \BackedEnum | null $activeNavigationIcon = 'heroicon-s-banknotes';
 
-    protected static ?string $navigationGroup = 'HR Management';
+    protected static string | \UnitEnum | null $navigationGroup = 'HR Management';
     protected static ?int $navigationSort = 4;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 //
-                Forms\Components\Select::make('employee_id')
+                Select::make('employee_id')
                     ->options(function () {
                         return Employee::all()->pluck('full_name', 'id');
                     })
@@ -48,25 +57,25 @@ class PayrollResource extends Resource
                     )
                     ->required()
                     ->label('Employee'),
-                Forms\Components\DatePicker::make('pay_date')
+                DatePicker::make('pay_date')
                     ->label('Pay Date')
                     ->required(),
-                Forms\Components\TextInput::make('period')
+                TextInput::make('period')
                     ->label('Period')
                     ->placeholder('e.g., 2025-01')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('gross_pay')
+                TextInput::make('gross_pay')
                     ->label('Gross Pay')
                     ->required()
                     ->numeric(),
 
-                Forms\Components\TextInput::make('net_pay')
+                TextInput::make('net_pay')
                     ->label('Net Pay')
                     ->required()
                     ->numeric(),
 
-                Forms\Components\Select::make('status')
+                Select::make('status')
                     ->options([
                         'pending' => 'Pending',
                         'completed' => 'Completed',
@@ -89,7 +98,7 @@ class PayrollResource extends Resource
                     ->keyLabel('Type')
 
                     ->valueLabel('Amount'),
-                Forms\Components\Textarea::make('notes')
+                Textarea::make('notes')
                     ->label('Notes')
                     ->nullable()
                     ->columnSpan('full'),
@@ -107,7 +116,7 @@ class PayrollResource extends Resource
                     ->searchable(),
 
 
-                Tables\Columns\TextColumn::make('employee.full_name')
+                TextColumn::make('employee.full_name')
                     ->label('Employee')
                     ->searchable([
                         'employees.first_name',
@@ -119,24 +128,24 @@ class PayrollResource extends Resource
                             'employees.last_name',
                         ]
                     ),
-                Tables\Columns\TextColumn::make('pay_date')
+                TextColumn::make('pay_date')
                     ->date()
                     ->label('Pay Date')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('period')
+                TextColumn::make('period')
                     ->label('Period')
                     ->searchable()
                     ->limit(10)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('gross_pay')
+                TextColumn::make('gross_pay')
                     ->label('Gross Pay')
                     ->sortable()
                     ->money('KSH', true),
-                Tables\Columns\TextColumn::make('net_pay')
+                TextColumn::make('net_pay')
                     ->label('Net Pay')
                     ->sortable()
                     ->money('KSH', true),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'pending' => 'warning',
@@ -151,17 +160,17 @@ class PayrollResource extends Resource
             ])
             ->filters([
                 //
-                Tables\Filters\SelectFilter::make('status')
+                SelectFilter::make('status')
                     ->options([
                         'pending' => 'Pending',
                         'completed' => 'Completed',
                         'cancelled' => 'Cancelled',
                     ])
                     ->label('Status'),
-                Tables\Filters\Filter::make('employee')
+                Filter::make('employee')
 
-                    ->form([
-                        Forms\Components\Select::make('employee_id')
+                    ->schema([
+                        Select::make('employee_id')
                             ->label('Employee')
                             ->options(function () {
                                 return Employee::all()->pluck('full_name', 'id');
@@ -173,17 +182,17 @@ class PayrollResource extends Resource
 
 
             ])
-            ->actions([
-                ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                \Filament\Actions\ActionGroup::make([
+                    \Filament\Actions\ViewAction::make(),
+                    \Filament\Actions\EditAction::make(),
+                    \Filament\Actions\DeleteAction::make(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc')
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -198,7 +207,7 @@ class PayrollResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPayrolls::route('/'),
+            'index' => ListPayrolls::route('/'),
             // 'create' => Pages\CreatePayroll::route('/create'),
             // 'edit' => Pages\EditPayroll::route('/{record}/edit'),
         ];

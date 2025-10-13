@@ -2,12 +2,20 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\AdminResource\Pages\ListAdmins;
 use App\Filament\Resources\AdminResource\Pages;
 use App\Filament\Resources\AdminResource\RelationManagers;
 
 use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -22,21 +30,21 @@ class AdminResource extends Resource
     protected static ?string $model = User::class;
     protected static ?string $label = 'Admin';
     protected static ?string $pluralLabel = 'Admins';
-    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
-    protected static ?string $navigationGroup = 'Organization';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-circle';
+    protected static string | \UnitEnum | null $navigationGroup = 'Organization';
     protected static ?int $navigationSort = 2;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 //
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->label('Name')
                     ->required()
                     ->maxLength(255)
                 ,
-                Forms\Components\TextInput::make('email')
+                TextInput::make('email')
                     ->label('Email')
                     ->email()
                     ->required()
@@ -44,14 +52,14 @@ class AdminResource extends Resource
                     ->unique(ignoreRecord: true)
                 ,
 
-                Forms\Components\TextInput::make('password')
+                TextInput::make('password')
                     ->label('Password')
                     ->password()
                     ->revealable()
                     ->required()
                     ->same('password_confirmation')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('password_confirmation')
+                TextInput::make('password_confirmation')
                     ->label('Confirm Password')
                     ->password()
                     ->revealable()
@@ -78,18 +86,18 @@ class AdminResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\DeleteAction::make()
+            ->recordActions([
+                ActionGroup::make([
+                    EditAction::make(),
+                    ViewAction::make(),
+                    DeleteAction::make()
                         ->hidden(fn($record) => auth()->id() === $record->id)
                     ,
                 ])
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()
                         ->before(function ($action, $records) {
                             if ($records->contains(fn($record) => $record->id === auth()->id())) {
                                 Notification::make()->title('You cannot delete your own account, try again')
@@ -112,7 +120,7 @@ class AdminResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAdmins::route('/'),
+            'index' => ListAdmins::route('/'),
             // 'create' => Pages\CreateAdmin::route('/create'),
             // 'edit' => Pages\EditAdmin::route('/{record}/edit'),
         ];

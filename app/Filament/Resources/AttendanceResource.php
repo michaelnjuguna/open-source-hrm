@@ -2,18 +2,29 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use App\Models\Employee;
+use Filament\Schemas\Components\Grid;
+use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\AttendanceResource\Pages\ListAttendances;
 use App\Filament\Resources\AttendanceResource\Pages;
 use App\Filament\Resources\AttendanceResource\RelationManagers;
 use App\Models\Attendance;
 use App\Models\Shift;
 use Filament\Forms;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
@@ -26,25 +37,25 @@ class AttendanceResource extends Resource
 {
     protected static ?string $model = Attendance::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-clock';
-    protected static ?string $navigationGroup = 'HR Management';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-clock';
+    protected static string | \UnitEnum | null $navigationGroup = 'HR Management';
     protected static ?int $navigationSort = 2;
 
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('employee_id')
                     ->options(function () {
-                        return \App\Models\Employee::all()->pluck('full_name', 'id');
+                        return Employee::all()->pluck('full_name', 'id');
                     })
                     ->label('Employee')
                     ->required()
                     ->searchable(),
                 Select::make('shift_id')
                     ->options(function () {
-                        return \App\Models\Shift::all()->pluck('name', 'id');
+                        return Shift::all()->pluck('name', 'id');
                     })
                     ->preload()
                     ->label('Shift')
@@ -81,7 +92,7 @@ class AttendanceResource extends Resource
                         ])->id;
                     })
                 ,
-                Forms\Components\DatePicker::make('date')
+                DatePicker::make('date')
                     ->required()
                     ->label('Attendance Date'),
                 TimePicker::make('clock_in')
@@ -113,11 +124,11 @@ class AttendanceResource extends Resource
                     ->latest()
             )
             ->columns([
-                Tables\Columns\TextColumn::make('employee.employee_number')
+                TextColumn::make('employee.employee_number')
                     ->label('Employee No.')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('employee.full_name')
+                TextColumn::make('employee.full_name')
                     ->searchable([
                         'employees.first_name',
                         'employees.last_name',
@@ -131,24 +142,24 @@ class AttendanceResource extends Resource
                     )
                     ->label('Name')
                 ,
-                Tables\Columns\TextColumn::make('shift.name')
+                TextColumn::make('shift.name')
                     ->label('Shift'),
-                Tables\Columns\TextColumn::make('date')
+                TextColumn::make('date')
                     ->date()
 
                     ->label(' Date')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('clock_in')
+                TextColumn::make('clock_in')
                     ->dateTime('H:i')
                     ->label('Clock In Time'),
-                Tables\Columns\TextColumn::make('clock_out')
+                TextColumn::make('clock_out')
                     ->dateTime('H:i')
                     ->label('Clock Out Time'),
-                Tables\Columns\TextColumn::make('hours')
+                TextColumn::make('hours')
                     ->numeric(decimalPlaces: 2)
                     ->sortable()
                     ->label('Hours'),
-                Tables\Columns\TextColumn::make('remarks')
+                TextColumn::make('remarks')
                     ->limit(50)
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Remarks'),
@@ -159,16 +170,16 @@ class AttendanceResource extends Resource
                         ->label('Employee')
                         ->searchable()
                         ->options(
-                            \App\Models\Employee::all()->pluck('full_name', 'id')
+                            Employee::all()->pluck('full_name', 'id')
                         ),
                     SelectFilter::make('shift_id')
                         ->label('Shift')
                         ->options(
-                            \App\Models\Shift::all()->pluck('name', 'id')
+                            Shift::all()->pluck('name', 'id')
                         ),
-                    Tables\Filters\Filter::make('date')
-                        ->form([
-                            Forms\Components\DatePicker::make('date')
+                    Filter::make('date')
+                        ->schema([
+                            DatePicker::make('date')
                                 ->label('Select Date')
                                 ->required()
                             // ->default(now())
@@ -183,17 +194,17 @@ class AttendanceResource extends Resource
                 ]
 
             )
-            ->actions([
-                Tables\Actions\ActionGroup::make([
+            ->recordActions([
+                ActionGroup::make([
 
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
                 ])
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -208,7 +219,7 @@ class AttendanceResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAttendances::route('/'),
+            'index' => ListAttendances::route('/'),
             // 'create' => Pages\CreateAttendance::route('/create'),
             // 'view' => Pages\ViewAttendance::route('/{record}'),
             // 'edit' => Pages\EditAttendance::route('/{record}/edit'),

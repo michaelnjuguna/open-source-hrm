@@ -2,6 +2,12 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\MessageResource\Pages\ListMessages;
+use App\Filament\Resources\MessageResource\Pages\CreateMessage;
+use App\Filament\Resources\MessageResource\Pages\ViewMessage;
 use App\Filament\Resources\MessageResource\Pages;
 use App\Filament\Resources\MessageResource\RelationManagers;
 use Filament\Forms\Components\RichEditor;
@@ -13,8 +19,6 @@ use Illuminate\Support\Facades\Auth;
 use Filament\Forms;
 
 use Filament\Tables\Filters\Filter;
-
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Forms\Components\{TextInput, Textarea, Select, DateTimePicker};
@@ -28,15 +32,15 @@ class MessageResource extends Resource
 {
     protected static ?string $model = Topic::class;
 
-    protected static ?string $navigationIcon = "heroicon-o-envelope";
+    protected static string|\BackedEnum|null $navigationIcon = "heroicon-o-envelope";
 
-    protected static ?string $activeNavigationIcon = "heroicon-o-envelope-open";
+    protected static string|\BackedEnum|null $activeNavigationIcon = "heroicon-o-envelope-open";
     protected static ?string $navigationLabel = "Inbox";
     protected static ?string $label = "Message";
     protected static ?string $pluralModelLabel = "Messages";
 
-    protected static ?string $navigationGroup = "Work space";
-    protected static ?string $navigationBadgeTooltip = "Unread messages";
+    protected static string|\UnitEnum|null $navigationGroup = "Work space";
+    // protected static ?string $navigationBadgeTooltip = "Unread messages";
 
     public static function getNavigationBadge(): ?string
     {
@@ -85,9 +89,9 @@ class MessageResource extends Resource
         return $unreadCount > 0 ? (string) $unreadCount : null;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema([
+        return $schema->components([
             //
             TextInput::make("Subject")
                 ->required()
@@ -210,8 +214,8 @@ class MessageResource extends Resource
                     }),
             ])
 
-            ->actions([
-                ActionGroup::make([
+            ->recordActions([
+                \Filament\Actions\ActionGroup::make([
                     // EditAction::make()
                     //     ->modalHeading('Edit topic')
                     //     ->form(
@@ -258,15 +262,15 @@ class MessageResource extends Resource
                     //         ]
                     //     )
                     // ,
-                    ViewAction::make(),
-                    DeleteAction::make(
+                    \Filament\Actions\ViewAction::make(),
+                    \Filament\Actions\DeleteAction::make(
 
                     )
                 ]),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
 
@@ -283,9 +287,9 @@ class MessageResource extends Resource
     public static function getPages(): array
     {
         return [
-            "index" => Pages\ListMessages::route("/"),
-            "create" => Pages\CreateMessage::route("/create"),
-            "view" => Pages\ViewMessage::route("/{record}"),
+            "index" => ListMessages::route("/"),
+            "create" => CreateMessage::route("/create"),
+            "view" => ViewMessage::route("/{record}"),
             // "edit" => Pages\EditMessage::route("/{record}/edit"),
         ];
     }

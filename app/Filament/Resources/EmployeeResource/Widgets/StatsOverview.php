@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\EmployeeResource\Widgets;
 
+use App\Models\Employee;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
@@ -29,13 +30,13 @@ class StatsOverview extends BaseWidget
 
         return [
             //
-            Stat::make('Total Employees', \App\Models\Employee::count())
+            Stat::make('Total Employees', Employee::count())
                 ->label('Total Employees')
                 ->color('primary')
                 ->description('Total number of employees in the organization')
                 ->extraAttributes($commonAttributes)
                 ->icon('heroicon-o-user-group'),
-            Stat::make('Active Employees', \App\Models\Employee::where('is_active', true)->count())
+            Stat::make('Active Employees', Employee::where('is_active', true)->count())
                 ->color('success')
                 ->label('Active Employees')
                 ->extraAttributes(
@@ -46,7 +47,7 @@ class StatsOverview extends BaseWidget
                 )
                 ->description('Number of employees currently active employees')
                 ->icon('heroicon-o-check-circle'),
-            Stat::make('Inactive Employees', \App\Models\Employee::where('is_active', false)->count())
+            Stat::make('Inactive Employees', Employee::where('is_active', false)->count())
                 ->label('Inactive Employees')
                 ->description('Number of employees who are no longer active')
                 ->color('danger')

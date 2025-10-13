@@ -2,12 +2,24 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\LeaveResource\Pages\ListLeaves;
 use App\Filament\Resources\LeaveResource\Pages;
 use App\Filament\Resources\LeaveResource\RelationManagers;
 use App\Models\Employee;
 use App\Models\Leave;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
@@ -19,19 +31,19 @@ class LeaveResource extends Resource
 {
     protected static ?string $model = Leave::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-minus';
-    protected static ?string $navigationGroup = 'HR Management';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-minus';
+    protected static string | \UnitEnum | null $navigationGroup = 'HR Management';
     protected static ?int $navigationSort = 3;
 
     protected static ?string $modelLabel = 'Leave Requests';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 //
 
-                Forms\Components\Select::make('employee_id')
+                Select::make('employee_id')
                     ->options(function () {
                         return Employee::all()->pluck('full_name', 'id');
                     })
@@ -43,7 +55,7 @@ class LeaveResource extends Resource
                     )
                     ->required()
                     ->label('Employee'),
-                Forms\Components\Select::make('leave_type')
+                Select::make('leave_type')
                     ->options([
                         'Sick Leave' => 'Sick Leave',
                         'Vacation' => 'Vacation',
@@ -54,13 +66,13 @@ class LeaveResource extends Resource
                         'Other' => 'Other',
                     ])
                     ->required(),
-                Forms\Components\DatePicker::make('start_date')
+                DatePicker::make('start_date')
                     ->required()
                     ->label('Start Date'),
-                Forms\Components\DatePicker::make('end_date')
+                DatePicker::make('end_date')
                     ->required()
                     ->label('End Date'),
-                Forms\Components\Select::make('status')
+                Select::make('status')
                     ->options([
                         'Pending' => 'Pending',
                         'Approved' => 'Approved',
@@ -68,11 +80,11 @@ class LeaveResource extends Resource
                     ])
                     ->default('Pending')
                     ->required(),
-                Forms\Components\Textarea::make('rejection_reason')
+                Textarea::make('rejection_reason')
                     ->nullable()
                     ->columnSpan('full')
                     ->label('Rejection Reason'),
-                Forms\Components\Textarea::make('notes')
+                Textarea::make('notes')
                     ->nullable()
                     ->columnSpan('full')
                     ->label('Notes'),
@@ -91,11 +103,11 @@ class LeaveResource extends Resource
                     ->latest()
             )
             ->columns([
-                Tables\Columns\TextColumn::make('employee.employee_number')
+                TextColumn::make('employee.employee_number')
                     ->label('Employee No.')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('employee.full_name')
+                TextColumn::make('employee.full_name')
                     ->label('Employee')
                     ->searchable([
                         'employees.first_name',
@@ -105,18 +117,18 @@ class LeaveResource extends Resource
                         'employees.first_name',
                         'employees.last_name',
                     ]),
-                Tables\Columns\TextColumn::make('leave_type')
+                TextColumn::make('leave_type')
                     ->label('Leave Type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('start_date')
+                TextColumn::make('start_date')
                     ->date()
                     ->label('Start Date'),
-                Tables\Columns\TextColumn::make('end_date')
+                TextColumn::make('end_date')
                     ->date()
                     ->label('End Date'),
-                Tables\Columns\TextColumn::make('duration')
+                TextColumn::make('duration')
                     ->label('Duration(Days)'),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'Pending' => 'warning',
@@ -126,17 +138,17 @@ class LeaveResource extends Resource
                     })
                     ->label('Status')
                 ,
-                Tables\Columns\TextColumn::make('rejection_reason')
+                TextColumn::make('rejection_reason')
                     ->label('Rejection Reason')
                     ->default('N/A')
                     ->limit(50)
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('notes')
+                TextColumn::make('notes')
                     ->label('Notes')
                     ->limit(50)
                     ->default('N/A')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Created At'),
@@ -144,7 +156,7 @@ class LeaveResource extends Resource
             ->filters(
                 [
                     //
-                    Tables\Filters\SelectFilter::make('employee_id')
+                    SelectFilter::make('employee_id')
                         ->label('Employee')
                         ->searchable()
                         ->options(
@@ -155,7 +167,7 @@ class LeaveResource extends Resource
                                 ->pluck('employee.full_name', 'employee.id')
                         )
                         ->default(null),
-                    Tables\Filters\SelectFilter::make('status')
+                    SelectFilter::make('status')
                         ->label('Status')
                         ->options([
                             'Pending' => 'Pending',
@@ -163,7 +175,7 @@ class LeaveResource extends Resource
                             'Rejected' => 'Rejected',
                         ])
                         ->default(null),
-                    Tables\Filters\SelectFilter::make('leave_type')
+                    SelectFilter::make('leave_type')
                         ->label('Leave Type')
                         ->options([
                             'Sick Leave' => 'Sick Leave',
@@ -179,17 +191,17 @@ class LeaveResource extends Resource
                 ]
 
             )
-            ->actions([
-                Tables\Actions\ActionGroup::make([
+            ->recordActions([
+                ActionGroup::make([
 
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
                 ])
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
 
                 ]),
             ]);
@@ -205,7 +217,7 @@ class LeaveResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListLeaves::route('/'),
+            'index' => ListLeaves::route('/'),
             // 'create' => Pages\CreateLeave::route('/create'),
             // 'view' => Pages\ViewLeave::route('/{record}'),
             // 'edit' => Pages\EditLeave::route('/{record}/edit'),

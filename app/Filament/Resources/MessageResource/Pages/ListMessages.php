@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Filament\Resources\MessageResource\Pages;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Actions\CreateAction;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\{MessageResource};
 use App\Models\{Employee, User};
 use Filament\Actions;
-use Filament\Resources\Components\Tab;
 use Illuminate\Support\Facades\Auth;
 use Filament\Resources\Pages\ListRecords;
 
@@ -38,7 +39,7 @@ class ListMessages extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }
