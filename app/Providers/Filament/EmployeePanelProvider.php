@@ -21,7 +21,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Filament\Resources\MessageResource;
+use App\Filament\Resources\Messages\MessageResource;
 
 class EmployeePanelProvider extends PanelProvider
 {

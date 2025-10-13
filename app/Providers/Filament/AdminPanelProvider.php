@@ -4,7 +4,7 @@ namespace App\Providers\Filament;
 
 use Filament\Pages\Dashboard;
 use App\Filament\Pages\TasksBoardPage;
-use App\Filament\Resources\DepartmentResource\Widgets\StatsOverview;
+use App\Filament\Resources\Departments\Widgets\StatsOverview;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -61,7 +61,7 @@ class AdminPanelProvider extends PanelProvider
                     // Widgets\AccountWidget::class,
                     // Widgets\FilamentInfoWidget::class,
                 StatsOverview::class,
-                \App\Filament\Resources\EmployeeResource\Widgets\StatsOverview::class,
+                \App\Filament\Resources\Employees\Widgets\StatsOverview::class,
             ])
             ->navigationGroups([
                 'Work space',
