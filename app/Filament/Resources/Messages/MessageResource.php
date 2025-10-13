@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Messages;
 
+use App\Filament\Resources\Messages\Schemas\MessageForm;
 use Filament\Schemas\Schema;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -91,44 +92,7 @@ class MessageResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([
-            //
-            TextInput::make("Subject")
-                ->required()
-                ->maxLength(255)
-                ->columnSpanFull()
-                ->label("Subject"),
-            Select::make("receiver_id")
-                ->label("receiver")
-                ->required()
-                ->multiple()
-
-                ->options(
-                    collect()
-                        ->merge(
-                            Employee::all()->mapWithKeys(
-                                fn($employee) => [
-                                    "Employee_" . $employee->id =>
-                                        $employee->email
-                                ],
-                            ),
-                        )
-                        ->merge(
-                            User::all()->mapWithKeys(
-                                fn($user) => [
-                                    "User_" . $user->id =>
-                                        $user->email
-                                ],
-                            ),
-                        ),
-                )
-                ->columnSpanFull()
-                ->searchable(["first_name", "last_name"]),
-            Select::make("receiver_type")
-                ->options([Employee::class, User::class])
-                ->hidden(),
-            RichEditor::make("content")->required()->columnSpanFull(),
-        ]);
+        return MessageForm::configure($schema);
     }
 
     public static function table(Table $table): Table
