@@ -24,45 +24,18 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\Departments\Schemas\DepartmentForm;
 
 class DepartmentResource extends Resource
 {
     protected static ?string $model = Department::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-group';
-    protected static string | \UnitEnum | null $navigationGroup = 'Organization';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-group';
+    protected static string|\UnitEnum|null $navigationGroup = 'Organization';
 
     public static function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                //
-                TextInput::make('name')
-                    ->required()
-                    ->maxLength(255)
-                    ->label('Department Name')
-                    ->placeholder('Enter department name'),
-                TextInput::make('code')
-                    ->maxLength(50)
-                    ->label('Department Code')
-                    ->placeholder('Enter department code'),
-                Textarea::make('description')
-                    ->maxLength(500)
-                    ->label('Description')
-                    ->placeholder('Enter department description'),
-                Select::make('manager_id')
-                    ->options(function () {
-                        return Employee::all()->pluck('full_name', 'id');
-                    })
-                    ->label('Manager')
-                    ->searchable(
-
-                    )
-                    ->placeholder('Select a manager')
-                    ->preload()
-                    ->nullable(),
-
-            ]);
+        return DepartmentForm::configure($schema);
     }
 
     public static function table(Table $table): Table
