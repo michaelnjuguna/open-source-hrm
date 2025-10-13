@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Messages\Pages;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Actions\CreateAction;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\{MessageResource};
+use App\Filament\Resources\Messages\{MessageResource};
 use App\Models\{Employee, User};
 use Filament\Actions;
 use Illuminate\Support\Facades\Auth;
