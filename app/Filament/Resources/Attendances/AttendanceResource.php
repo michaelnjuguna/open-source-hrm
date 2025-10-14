@@ -60,38 +60,55 @@ class AttendanceResource extends Resource
             ->columns([
                 TextColumn::make('employee.employee_number')
                     ->label('Employee No.')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('employee.full_name')
                     ->searchable([
-                        'employees.first_name',
-                        'employees.last_name',
+                        'first_name',
+                        'last_name',
 
                     ])
                     ->sortable(
                         [
-                            'employees.first_name',
-                            'employees.last_name',
+                            'first_name',
+                            'last_name',
+                        ]
+                    ),
+                TextColumn::make('employee.full_name')
+                    ->searchable([
+                        'first_name',
+                        'last_name',
+
+                    ])
+                    ->sortable(
+                        [
+                            'first_name',
+                            'last_name',
                         ]
                     )
                     ->label('Name')
                 ,
                 TextColumn::make('shift.name')
-                    ->label('Shift'),
+                    ->label('Shift')
+                    ->searchable()
+                ,
                 TextColumn::make('date')
                     ->date()
 
                     ->label(' Date')
+                    ->searchable()
                     ->sortable(),
                 TextColumn::make('clock_in')
                     ->dateTime('H:i')
+                    ->searchable()
+                    ->sortable()
                     ->label('Clock In Time'),
                 TextColumn::make('clock_out')
                     ->dateTime('H:i')
+                    ->searchable()
+                    ->sortable()
                     ->label('Clock Out Time'),
                 TextColumn::make('hours')
                     ->numeric(decimalPlaces: 2)
                     ->sortable()
+
                     ->label('Hours'),
                 TextColumn::make('remarks')
                     ->limit(50)
