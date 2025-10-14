@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Employee;
 use App\Models\Shift;
@@ -10,7 +11,9 @@ use App\Models\Shift;
 class Attendance extends Model
 {
     //
+    use HasFactory;
     protected $table = 'attendances';
+    protected $with = ['shift', 'employee'];
 
     protected $fillable = [
         'employee_id',

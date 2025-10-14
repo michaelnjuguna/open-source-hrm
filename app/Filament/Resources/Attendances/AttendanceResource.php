@@ -119,7 +119,12 @@ class AttendanceResource extends Resource
                 [
                     SelectFilter::make('employee_id')
                         ->label('Employee')
-                        ->searchable()
+                        ->searchable(
+                            [
+                                'first_name',
+                                'last_name'
+                            ]
+                        )
                         ->options(
                             Employee::all()->pluck('full_name', 'id')
                         ),

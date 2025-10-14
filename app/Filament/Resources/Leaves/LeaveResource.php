@@ -55,17 +55,19 @@ class LeaveResource extends Resource
             ->columns([
                 TextColumn::make('employee.employee_number')
                     ->label('Employee No.')
-                    ->searchable()
+                    ->searchable(
+
+                    )
                     ->sortable(),
                 TextColumn::make('employee.full_name')
                     ->label('Employee')
                     ->searchable([
-                        'employees.first_name',
-                        'employees.last_name',
+                        'first_name',
+                        'last_name',
                     ])
                     ->sortable([
-                        'employees.first_name',
-                        'employees.last_name',
+                        'first_name',
+                        'last_name',
                     ]),
                 TextColumn::make('leave_type')
                     ->label('Leave Type')
