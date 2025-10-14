@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Admins;
 
+use App\Filament\Resources\Admins\Schemas\AdminForm;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Actions\ActionGroup;
@@ -30,44 +31,13 @@ class AdminResource extends Resource
     protected static ?string $model = User::class;
     protected static ?string $label = 'Admin';
     protected static ?string $pluralLabel = 'Admins';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-circle';
-    protected static string | \UnitEnum | null $navigationGroup = 'Organization';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-circle';
+    protected static string|\UnitEnum|null $navigationGroup = 'Organization';
     protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                //
-                TextInput::make('name')
-                    ->label('Name')
-                    ->required()
-                    ->maxLength(255)
-                ,
-                TextInput::make('email')
-                    ->label('Email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255)
-                    ->unique(ignoreRecord: true)
-                ,
-
-                TextInput::make('password')
-                    ->label('Password')
-                    ->password()
-                    ->revealable()
-                    ->required()
-                    ->same('password_confirmation')
-                    ->maxLength(255),
-                TextInput::make('password_confirmation')
-                    ->label('Confirm Password')
-                    ->password()
-                    ->revealable()
-                    ->required()
-                    ->maxLength(255)
-                    ->same('password')
-
-            ]);
+        return AdminForm::configure($schema);
     }
 
     public static function table(Table $table): Table
