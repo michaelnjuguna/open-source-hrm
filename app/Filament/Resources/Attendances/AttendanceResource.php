@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Attendances;
 
+use App\Filament\Resources\Attendances\Schemas\AttendanceForm;
 use Filament\Schemas\Schema;
 use App\Models\Employee;
 use Filament\Schemas\Components\Grid;
@@ -37,81 +38,14 @@ class AttendanceResource extends Resource
 {
     protected static ?string $model = Attendance::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-clock';
-    protected static string | \UnitEnum | null $navigationGroup = 'HR Management';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-clock';
+    protected static string|\UnitEnum|null $navigationGroup = 'HR Management';
     protected static ?int $navigationSort = 2;
 
 
     public static function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                Select::make('employee_id')
-                    ->options(function () {
-                        return Employee::all()->pluck('full_name', 'id');
-                    })
-                    ->label('Employee')
-                    ->required()
-                    ->searchable(),
-                Select::make('shift_id')
-                    ->options(function () {
-                        return Shift::all()->pluck('name', 'id');
-                    })
-                    ->preload()
-                    ->label('Shift')
-                    ->searchable()
-                    ->createOptionForm(
-                        [
-                            TextInput::make('name')
-                                ->required()
-                                ->label('Shift Name')
-
-                            ,
-                            Grid::make(2)->schema([
-
-                                TimePicker::make('start_time')
-                                    ->required()
-                                    ->label('Start Time')
-                                    ->time(),
-                                TimePicker::make('end_time')
-                                    ->required()
-                                    ->label('End Time')
-                                    ->time(),
-                            ]),
-
-
-
-                        ]
-                    )
-                    ->createOptionUsing(function (array $data) {
-                        return Shift::create([
-                            'name' => $data['name'],
-                            'start_time' => $data['start_time'],
-                            'end_time' => $data['end_time'],
-                            'is_default' => $data['is_default'] ?? false,
-                        ])->id;
-                    })
-                ,
-                DatePicker::make('date')
-                    ->required()
-                    ->label('Attendance Date'),
-                TimePicker::make('clock_in')
-                    ->required()
-                    ->label('Clock In Time')
-                    ->time(),
-                TimePicker::make('clock_out')
-                    // ->required()
-                    ->label('Clock Out Time')
-                    ->time(),
-
-                Textarea::make('remarks')
-                    ->label('Remarks')
-                    ->maxLength(255)
-                    ->nullable()
-                    ->autosize()
-                    ->columnSpanFull()
-                ,
-            ]);
+        return AttendanceForm::configure($schema);
     }
 
     public static function table(Table $table): Table
