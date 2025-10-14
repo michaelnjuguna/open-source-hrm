@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Filament\Resources\Payrolls;
-
+use App\Filament\Resources\Payrolls\Schema\PayrollForm;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\DatePicker;
@@ -34,75 +34,15 @@ class PayrollResource extends Resource
     // TODO: Add icons
     protected static ?string $model = Payroll::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-banknotes';
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'heroicon-s-banknotes';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'heroicon-s-banknotes';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'HR Management';
+    protected static string|\UnitEnum|null $navigationGroup = 'HR Management';
     protected static ?int $navigationSort = 4;
 
     public static function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                //
-                Select::make('employee_id')
-                    ->options(function () {
-                        return Employee::all()->pluck('full_name', 'id');
-                    })
-                    ->searchable(
-                        [
-                            'first_name',
-                            'last_name',
-                        ]
-                    )
-                    ->required()
-                    ->label('Employee'),
-                DatePicker::make('pay_date')
-                    ->label('Pay Date')
-                    ->required(),
-                TextInput::make('period')
-                    ->label('Period')
-                    ->placeholder('e.g., 2025-01')
-                    ->required()
-                    ->maxLength(255),
-                TextInput::make('gross_pay')
-                    ->label('Gross Pay')
-                    ->required()
-                    ->numeric(),
-
-                TextInput::make('net_pay')
-                    ->label('Net Pay')
-                    ->required()
-                    ->numeric(),
-
-                Select::make('status')
-                    ->options([
-                        'pending' => 'Pending',
-                        'completed' => 'Completed',
-                        'cancelled' => 'Cancelled',
-                    ])
-                    ->default('pending'),
-                KeyValue::make('deductions')
-                    ->label('Deductions')
-                    ->keyLabel('Type')
-
-                    ->valueLabel('Amount'),
-
-                KeyValue::make('allowances')
-                    ->label('Allowances')
-                    ->keyLabel('Type')
-
-                    ->valueLabel('Amount'),
-                KeyValue::make('bonuses')
-                    ->label('Bonuses')
-                    ->keyLabel('Type')
-
-                    ->valueLabel('Amount'),
-                Textarea::make('notes')
-                    ->label('Notes')
-                    ->nullable()
-                    ->columnSpan('full'),
-            ]);
+        return PayrollForm::configure($schema);
     }
 
     public static function table(Table $table): Table
@@ -119,13 +59,13 @@ class PayrollResource extends Resource
                 TextColumn::make('employee.full_name')
                     ->label('Employee')
                     ->searchable([
-                        'employees.first_name',
-                        'employees.last_name',
+                        'first_name',
+                        'last_name',
                     ])
                     ->sortable(
                         [
-                            'employees.first_name',
-                            'employees.last_name',
+                            'first_name',
+                            'last_name',
                         ]
                     ),
                 TextColumn::make('pay_date')
