@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Leaves;
 
+use App\Filament\Resources\Leaves\Schemas\LeaveForm;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\DatePicker;
@@ -31,66 +32,15 @@ class LeaveResource extends Resource
 {
     protected static ?string $model = Leave::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-minus';
-    protected static string | \UnitEnum | null $navigationGroup = 'HR Management';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-minus';
+    protected static string|\UnitEnum|null $navigationGroup = 'HR Management';
     protected static ?int $navigationSort = 3;
 
     protected static ?string $modelLabel = 'Leave Requests';
 
     public static function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                //
-
-                Select::make('employee_id')
-                    ->options(function () {
-                        return Employee::all()->pluck('full_name', 'id');
-                    })
-                    ->searchable(
-                        [
-                            'first_name',
-                            'last_name',
-                        ]
-                    )
-                    ->required()
-                    ->label('Employee'),
-                Select::make('leave_type')
-                    ->options([
-                        'Sick Leave' => 'Sick Leave',
-                        'Vacation' => 'Vacation',
-                        'Personal Leave' => 'Personal Leave',
-                        'Maternity Leave' => 'Maternity Leave',
-                        'Paternity Leave' => 'Paternity Leave',
-                        'Bereavement Leave' => 'Bereavement Leave',
-                        'Other' => 'Other',
-                    ])
-                    ->required(),
-                DatePicker::make('start_date')
-                    ->required()
-                    ->label('Start Date'),
-                DatePicker::make('end_date')
-                    ->required()
-                    ->label('End Date'),
-                Select::make('status')
-                    ->options([
-                        'Pending' => 'Pending',
-                        'Approved' => 'Approved',
-                        'Rejected' => 'Rejected',
-                    ])
-                    ->default('Pending')
-                    ->required(),
-                Textarea::make('rejection_reason')
-                    ->nullable()
-                    ->columnSpan('full')
-                    ->label('Rejection Reason'),
-                Textarea::make('notes')
-                    ->nullable()
-                    ->columnSpan('full')
-                    ->label('Notes'),
-
-
-            ]);
+        return LeaveForm::configure($schema);
     }
 
     public static function table(Table $table): Table
