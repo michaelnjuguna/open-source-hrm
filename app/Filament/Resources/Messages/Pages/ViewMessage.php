@@ -69,6 +69,7 @@ class ViewMessage extends ViewRecord
                 ->schema([
                     FRichEditor::make('content')
                         ->required()
+                        ->extraAttributes(['style' => 'height: 400px;'])
                 ])
                 ->action(function ($data) {
                     // $data['topic_id'] = $this->record->topic_id;
@@ -81,6 +82,10 @@ class ViewMessage extends ViewRecord
                         'sender_id' => auth()->id(),
                         'content' => $data['content'],
                     ]);
+                    Notification::make()
+                        ->title('Reply sent successfully')
+                        ->success()
+                        ->send();
                 }),
         ];
     }
@@ -89,7 +94,7 @@ class ViewMessage extends ViewRecord
 
     public function infolist(Schema $schema): Schema
     {
-        return $infolist->schema([
+        return $schema->components([
             RepeatableEntry::make('message')
                 ->label('')
                 ->schema([
@@ -163,13 +168,15 @@ class ViewMessage extends ViewRecord
                         ]),
                     TextEntry::make('content')->label('')->html()
 
-                ])->columnSpanFull(),
+                ])->columnSpanFull()
+            ,
             Actions::make([
                 FAction::make('CreateAction')
                     ->label('Reply')
                     ->schema([
                         FRichEditor::make('content')
                             ->required()
+                            ->extraAttributes(['style' => 'height: 400px;'])
                     ])
                     ->action(function ($data) {
                         Message::create([
@@ -178,8 +185,13 @@ class ViewMessage extends ViewRecord
                             'sender_id' => auth()->id(),
                             'content' => $data['content'],
                         ]);
-                    }),
 
+                        Notification::make()
+                            ->title('Reply sent successfully')
+                            ->success()
+                            ->send();
+
+                    })
             ])
         ]);
     }
