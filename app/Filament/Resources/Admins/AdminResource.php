@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Admins;
 
+use App\Filament\Resources\Admin\Schemas\AdminTable;
 use App\Filament\Resources\Admins\Schemas\AdminForm;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
@@ -42,42 +43,7 @@ class AdminResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                TextColumn::make('name')
-                    ->label('Name')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('email')
-                    ->label('Email')
-                    ->searchable()
-                    ->sortable()
-            ])
-            ->filters([
-                //
-            ])
-            ->recordActions([
-                ActionGroup::make([
-                    EditAction::make(),
-                    ViewAction::make(),
-                    DeleteAction::make()
-                        ->hidden(fn($record) => auth()->id() === $record->id)
-                    ,
-                ])
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make()
-                        ->before(function ($action, $records) {
-                            if ($records->contains(fn($record) => $record->id === auth()->id())) {
-                                Notification::make()->title('You cannot delete your own account, try again')
-                                    ->warning()->send();
-                                $action->cancel();
-                            }
-                        })
-                    ,
-                ]),
-            ]);
+        return AdminTable::configure($table);
     }
 
     public static function getRelations(): array
