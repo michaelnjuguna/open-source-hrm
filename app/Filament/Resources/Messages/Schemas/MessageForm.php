@@ -44,7 +44,9 @@ class MessageForm
             Select::make("receiver_type")
                 ->options([Employee::class, User::class])
                 ->hidden(),
-            RichEditor::make("content")->required()->columnSpanFull(),
+            RichEditor::make("content")->required()
+                // ->extraAttributes(['style' => 'height: 400px;'])
+                ->columnSpanFull(),
         ]);
     }
 }

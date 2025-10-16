@@ -40,6 +40,11 @@ class ListMessages extends ListRecords
     {
         return [
             CreateAction::make(),
+            Actions\Action::make('refresh')
+                ->label(' ')
+                ->icon('heroicon-o-arrow-path')
+                ->color('gray')
+                ->action(fn() => $this->refresh()),
         ];
     }
 }

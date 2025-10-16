@@ -40,6 +40,10 @@ class ViewMessage extends ViewRecord
         // return 'Subject: ' . optional($this->record->topic)->subject;
         return 'Subject: ' . $this->record->subject;
     }
+    public function refreshInfo()
+    {
+        $this->refresh();
+    }
     protected function getHeaderActions(): array
     {
         return [
@@ -69,7 +73,8 @@ class ViewMessage extends ViewRecord
                 ->schema([
                     FRichEditor::make('content')
                         ->required()
-                        ->extraAttributes(['style' => 'height: 400px;'])
+                        ->autofocus()
+                    // ->extraAttributes(['style' => 'height: 400px;'])
                 ])
                 ->action(function ($data) {
                     // $data['topic_id'] = $this->record->topic_id;
@@ -82,11 +87,18 @@ class ViewMessage extends ViewRecord
                         'sender_id' => auth()->id(),
                         'content' => $data['content'],
                     ]);
+                    $this->record->load('message');
+                    $this->refresh();
                     Notification::make()
                         ->title('Reply sent successfully')
                         ->success()
                         ->send();
                 }),
+            FAction::make('refresh')
+                ->label(' ')
+                ->icon('heroicon-o-arrow-path')
+                ->color('gray')
+                ->action(fn() => $this->refresh()),
         ];
     }
 
@@ -119,6 +131,8 @@ class ViewMessage extends ViewRecord
                                 FAction::make('delete')
                                     ->action(function ($record) {
                                         Message::destroy($record->id);
+                                        $this->record->load('message');
+                                        $this->refresh();
                                         Notification::make()
                                             ->title('Message deleted')
                                             ->success()
@@ -134,34 +148,8 @@ class ViewMessage extends ViewRecord
                                     ->modalButton('Yes, Delete')
                                     ->modalIconColor('danger')
                                     ->modalIcon('heroicon-o-trash')
-                                    ->iconButton(),
-                                FAction::make('edit')
-                                    ->schema([
-                                        FRichEditor::make('content')
-                                            ->required()
-
-                                    ])
-                                    ->mountUsing(function (Schema $schema, $record) {
-                                        $schema->fill([
-                                            'content' => $record->content,
-                                        ]);
-                                    })
-                                    ->action(function (array $data, $record) {
-                                        $record->update([
-                                            'content' => $data['content']
-                                        ]);
-                                        Notification::make()
-                                            ->title('Message updated successfully')
-                                            ->success()
-                                            ->send();
-                                    })
-                                    ->modalButton('Save Changes')
-                                    ->modalHeading('Edit Content')
                                     ->iconButton()
-                                    ->label('')
-                                    ->icon('heroicon-o-pencil-square')
-                                    ->color('gray')
-                                    ->tooltip('Edit')
+
                             ])->alignEnd()->columnSpan(1)
 
 
@@ -171,13 +159,15 @@ class ViewMessage extends ViewRecord
                 ])->columnSpanFull()
             ,
             Actions::make([
-                FAction::make('CreateAction')
+                FAction::make('Reply')
                     ->label('Reply')
                     ->schema([
                         FRichEditor::make('content')
                             ->required()
-                            ->extraAttributes(['style' => 'height: 400px;'])
+                            ->autofocus()
+                        // ->extraAttributes(['style' => 'height: 400px;'])
                     ])
+
                     ->action(function ($data) {
                         Message::create([
                             'topic_id' => $this->record->id,
@@ -186,13 +176,19 @@ class ViewMessage extends ViewRecord
                             'content' => $data['content'],
                         ]);
 
+
+                        $this->record->load('message');
+                        $this->refresh();
                         Notification::make()
                             ->title('Reply sent successfully')
                             ->success()
                             ->send();
 
+
                     })
-            ])
+
+            ]),
+
         ]);
     }
 }
