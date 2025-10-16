@@ -31,11 +31,7 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->spa()
-            // Footer
-            // ->renderHook(
-            //     PanelsRenderHook::FOOTER,
-            //     fn() => view('footer')
-            // )
+
             ->default()
             ->id('admin')
             ->path('/')
