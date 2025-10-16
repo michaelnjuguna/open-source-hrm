@@ -2,32 +2,12 @@
 
 namespace App\Filament\Resources\Payrolls;
 use App\Filament\Resources\Payrolls\Schema\PayrollForm;
+use App\Filament\Resources\Payrolls\Schema\PayrollTable;
 use Filament\Schemas\Schema;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\Filter;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\Payrolls\Pages\ListPayrolls;
-use App\Filament\Resources\PayrollResource\Pages;
-use App\Filament\Resources\PayrollResource\RelationManagers;
 use App\Models\Payroll;
-// use Filament\Actions\ActionGroup;
-use Filament\Forms;
-use Filament\Forms\Components\KeyValue;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Models\Employee;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Actions\{ActionGroup, DeleteAction, EditAction, ViewAction};
-
-
 class PayrollResource extends Resource
 {
     // TODO: Global search
@@ -47,94 +27,7 @@ class PayrollResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                TextColumn::make('employee.employee_number')
-                    ->label('Employee No.')
-                    ->sortable()
-                    ->searchable(isIndividual: true)
-                    ->searchable(),
-
-
-                TextColumn::make('employee.full_name')
-                    ->label('Employee')
-                    ->searchable([
-                        'first_name',
-                        'last_name',
-                    ])
-                    ->sortable(
-                        [
-                            'first_name',
-                            'last_name',
-                        ]
-                    ),
-                TextColumn::make('pay_date')
-                    ->date()
-                    ->label('Pay Date')
-                    ->sortable(),
-                TextColumn::make('period')
-                    ->label('Period')
-                    ->searchable()
-                    ->limit(10)
-                    ->sortable(),
-                TextColumn::make('gross_pay')
-                    ->label('Gross Pay')
-                    ->sortable()
-                    ->money('KSH', true),
-                TextColumn::make('net_pay')
-                    ->label('Net Pay')
-                    ->sortable()
-                    ->money('KSH', true),
-                TextColumn::make('status')
-                    ->badge()
-                    ->color(fn(string $state): string => match ($state) {
-                        'pending' => 'warning',
-                        'completed' => 'success',
-                        'cancelled' => 'danger',
-                        default => 'secondary',
-                    })
-                    ->label('Status'),
-
-
-
-            ])
-            ->filters([
-                //
-                SelectFilter::make('status')
-                    ->options([
-                        'pending' => 'Pending',
-                        'completed' => 'Completed',
-                        'cancelled' => 'Cancelled',
-                    ])
-                    ->label('Status'),
-                Filter::make('employee')
-
-                    ->schema([
-                        Select::make('employee_id')
-                            ->label('Employee')
-                            ->options(function () {
-                                return Employee::all()->pluck('full_name', 'id');
-                            })
-                            ->searchable()
-                            ->required(),
-
-                    ]),
-
-
-            ])
-            ->recordActions([
-                \Filament\Actions\ActionGroup::make([
-                    \Filament\Actions\ViewAction::make(),
-                    \Filament\Actions\EditAction::make(),
-                    \Filament\Actions\DeleteAction::make(),
-                ]),
-            ])
-            ->defaultSort('created_at', 'desc')
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+        return PayrollTable::configure($table);
     }
 
     public static function getRelations(): array
