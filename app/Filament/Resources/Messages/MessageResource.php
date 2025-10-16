@@ -28,6 +28,7 @@ use Filament\Tables\Table;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\Message\Schemas\MessageTable;
 
 class MessageResource extends Resource
 {
@@ -97,156 +98,11 @@ class MessageResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
 
-            ->modifyQueryUsing(function ($query) {
-                $userId = Auth::id();
-                return $query->where(function ($query) use ($userId) {
-                    $query
-                        ->where("creator_id", $userId)
-                        ->orWhere("receiver_id", $userId);
-                });
-            })
-            ->columns([
-                //
-                TextColumn::make("creator.name")
-                    ->sortable()
-                    ->searchable()
-                    ->label("Sender")
-                    ->weight(function ($record) {
-                        return $record
-                            ->message()
-                            ->whereNull("read_at")
-                            ->exists()
-                            ? FontWeight::Bold
-                            : FontWeight::Light;
-                    })
-                    ->color(function ($record) {
-                        return $record
-                            ->message()
-                            ->whereNull("read_at")
-                            ->exists()
-                            ? "light"
-                            : "gray";
-                    }),
-                TextColumn::make("subject")
-                    ->label("Subject")
-                    ->searchable()
-                    ->limit(20)
-                    ->color(
-                        color: function ($record) {
-                            return $record
-                                ->message()
-                                ->whereNull("read_at")
-                                ->exists()
-                                ? "light"
-                                : "gray";
-                        },
-                    )
-                    ->weight(function ($record) {
-                        return $record
-                            ->message()
-                            ->whereNull("read_at")
-                            ->exists()
-                            ? FontWeight::Bold
-                            : FontWeight::Light;
-                    }),
-                // ->extraAttributes(function ($record) {
-                //     return $record->message()->whereNull('read_at')->exists() ? ['class' => 'font-bold text-blue-500'] : [];
-                // })
-                TextColumn::make("created_at")
-                    ->label("Created at")
-                    // ->formatStateUsing(fn($state) =>$state->format('d-m-Y H:i A') . '(' $state->diffForHumans() .')')
-                    ->formatStateUsing(
-                        fn($state) => $state->format("D, M-d-Y H:i A"),
-                    )
-                    ->weight(function ($record) {
-                        return $record
-                            ->message()
-                            ->whereNull("read_at")
-                            ->exists()
-                            ? FontWeight::Bold
-                            : FontWeight::Light;
-                    })
-                    ->color(function ($record) {
-                        return $record
-                            ->message()
-                            ->whereNull("read_at")
-                            ->exists()
-                            ? "light"
-                            : "gray";
-                    }),
-            ])
-
-            ->recordActions([
-                \Filament\Actions\ActionGroup::make([
-                    // EditAction::make()
-                    //     ->modalHeading('Edit topic')
-                    //     ->form(
-                    //         [
-                    //             TextInput::make("subject")
-                    //                 ->required()
-                    //                 ->maxLength(255)
-                    //                 ->columnSpanFull()
-                    //                 ->label("Subject"),
-                    //             Select::make("receiver_id")
-                    //                 ->label("receiver")
-                    //                 ->required()
-                    //                 ->multiple()
-
-                    //                 ->options(
-                    //                     collect()
-                    //                         ->merge(
-                    //                             Employee::all()->mapWithKeys(
-                    //                                 fn($employee) => [
-                    //                                     "Employee_" . $employee->id =>
-                    //                                         $employee->email
-                    //                                 ],
-                    //                             ),
-                    //                         )
-                    //                         ->merge(
-                    //                             User::all()->mapWithKeys(
-                    //                                 fn($user) => [
-                    //                                     "User_" . $user->id =>
-                    //                                         $user->email
-                    //                                 ],
-                    //                             ),
-                    //                         ),
-                    //                 )
-                    //                 ->columnSpanFull()
-                    //                 ->searchable(["first_name", "last_name"]),
-                    //         ]
-                    //     )
-                    //     ->fillForm(
-                    //         fn($record) => [
-                    //             'subject' => $record->subject,
-                    //             'receiver_id' => $record->receiver_type === 'employee'
-                    //                 ? "Employee_" . $record->receiver_id
-                    //                 : "User_" . $record->receiver_id,
-                    //         ]
-                    //     )
-                    // ,
-                    \Filament\Actions\ViewAction::make(),
-                    \Filament\Actions\DeleteAction::make(
-
-                    )
-                ]),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ])
-
-            ->defaultSort("created_at", "desc");
+        return MessageTable::configure($table);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
+
 
     public static function getPages(): array
     {
