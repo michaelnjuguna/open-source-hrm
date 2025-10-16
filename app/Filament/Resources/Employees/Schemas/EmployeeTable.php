@@ -1,4 +1,5 @@
 <?php
+namespace App\Filament\Resources\Employees\Schemas;
 
 use Filament\Tables\Table;
 use App\Models\{Employee, Position, Department};
