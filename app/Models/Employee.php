@@ -91,5 +91,9 @@ class Employee extends Authenticatable
     {
         return $this->belongsTo(Position::class, 'position_id');
     }
+    public function tasks()
+    {
+        return $this->morphMany(Task::class, 'assignee');
+    }
 
 }

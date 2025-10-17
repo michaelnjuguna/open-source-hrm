@@ -42,7 +42,10 @@ class User extends Authenticatable
     {
         return $this->name;
     }
-
+    public function tasks()
+    {
+        return $this->morphMany(Task::class, 'assignee');
+    }
     /**
      * Get the attributes that should be cast.
      *

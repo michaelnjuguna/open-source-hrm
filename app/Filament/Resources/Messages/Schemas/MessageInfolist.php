@@ -20,7 +20,8 @@ class MessageInfolist
 
                         ->schema([
                             TextEntry::make('sender.name')
-                                ->label('')
+                                ->hiddenLabel()
+                                ->helperText(fn($record) => $record->sender->email)
                                 ->weight(FontWeight::Bold)
 
                                 ->icon('heroicon-s-user-circle')

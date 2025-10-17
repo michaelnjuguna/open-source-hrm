@@ -33,6 +33,7 @@ class EmployeePanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Cyan,
             ])
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->spa()
             ->login()
             ->passwordReset()

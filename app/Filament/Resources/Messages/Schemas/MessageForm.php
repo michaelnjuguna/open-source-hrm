@@ -40,7 +40,7 @@ class MessageForm
                         ),
                 )
                 ->columnSpanFull()
-                ->searchable(["first_name", "last_name"]),
+                ->searchable(["email"]),
             Select::make("receiver_type")
                 ->options([Employee::class, User::class])
                 ->hidden(),
