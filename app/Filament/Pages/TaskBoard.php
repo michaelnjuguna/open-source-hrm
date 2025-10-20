@@ -33,7 +33,8 @@ class TaskBoard extends BoardPage
             ->columnIdentifier('status')
             ->positionIdentifier('position')
             ->cardSchema(fn(Schema $schema) => $schema->components([
-                TextEntry::make('.email')->icon('heroicon-o-user')
+                TextEntry::make('email')
+                    ->icon('heroicon-o-user')
                     ->hiddenLabel()
                     ->tooltip('Email')
                 ,
@@ -70,6 +71,7 @@ class TaskBoard extends BoardPage
                             ->columns(2)
                             ->schema([
                                 Select::make('assignee_id')
+                                    ->label('Assignee')
                                     ->options(
                                         collect()
                                             ->merge(
@@ -102,7 +104,7 @@ class TaskBoard extends BoardPage
                         $assigneeType = null;
 
                         if (str_starts_with($assigneeId, 'Employee_')) {
-                            $assigneeId = str_replace('EEmployee_', '', $assigneeId);
+                            $assigneeId = str_replace('Employee_', '', $assigneeId);
                             $assigneeType = Employee::class;
                         } elseif (str_starts_with($assigneeId, 'User_')) {
                             $assigneeId = str_replace('User_', '', $assigneeId);

@@ -23,7 +23,7 @@ class Task extends Model
         'due_date' => 'date',
     ];
     protected $table = 'tasks';
-    protected $appends = ['date'];
+    protected $appends = ['date', 'email'];
 
     public function assignee()
     {
@@ -33,7 +33,19 @@ class Task extends Model
 
     public function getDateAttribute()
     {
-        return $this->due_date ? $this->due_date->format('d-M-Y') : null;
+        return $this->due_date?->format('d-M-Y');
+    }
+    public function getEmailAttribute()
+    {
+
+        // if ($this->assignee_type == Employee::class) {
+        //     $employee = Employee::find($this->assignee_id);
+        //     return $employee->email;
+        // } elseif ($this->assignee_type == User::class) {
+        //     $user = User::find($this->assignee_id);
+        //     return $user->email;
+        // }
+        return $this->assignee?->email;
     }
 
 }
