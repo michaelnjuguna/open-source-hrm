@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
+
 
 class Task extends Model
 {
@@ -12,24 +12,32 @@ class Task extends Model
         'title',
         'description',
         'status',
-        'order_column',
-        'employee_id',
+        'sort_order',
+        'assignee_id',
+        'assignee_type',
         'due_date',
+        'position'
     ];
 
     protected $casts = [
         'due_date' => 'date',
     ];
     protected $table = 'tasks';
-    protected $appends = ['date'];
+    protected $appends = ['date', 'email'];
 
-    public function employee()
+    public function assignee()
     {
-        return $this->belongsTo(Employee::class);
+        return $this->morphTo();
     }
+
+
     public function getDateAttribute()
     {
-        return $this->due_date ? $this->due_date->format('d-M-Y') : null;
+        return $this->due_date?->format('d-M-Y');
+    }
+    public function getEmailAttribute()
+    {
+        return $this->assignee?->email;
     }
 
 }
