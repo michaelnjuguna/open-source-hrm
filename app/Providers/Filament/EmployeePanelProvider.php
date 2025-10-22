@@ -3,7 +3,8 @@
 namespace App\Providers\Filament;
 
 use Filament\Pages\Dashboard;
-use App\Filament\Pages\TasksBoardPage;
+use App\Filament\Pages\TaskBoard;
+
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
 use Filament\Http\Middleware\Authenticate;
@@ -47,6 +48,7 @@ class EmployeePanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Employee/Pages'), for: 'App\\Filament\\Employee\\Pages')
             ->pages([
                 Dashboard::class,
+                TaskBoard::class,
                 // TasksBoardPage::class,
             ])
             ->resources([
