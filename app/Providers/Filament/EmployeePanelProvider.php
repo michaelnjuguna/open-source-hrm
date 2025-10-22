@@ -49,7 +49,6 @@ class EmployeePanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
                 TaskBoard::class,
-                // TasksBoardPage::class,
             ])
             ->resources([
                 MessageResource::class
