@@ -37,14 +37,6 @@ class Task extends Model
     }
     public function getEmailAttribute()
     {
-
-        // if ($this->assignee_type == Employee::class) {
-        //     $employee = Employee::find($this->assignee_id);
-        //     return $employee->email;
-        // } elseif ($this->assignee_type == User::class) {
-        //     $user = User::find($this->assignee_id);
-        //     return $user->email;
-        // }
         return $this->assignee?->email;
     }
 

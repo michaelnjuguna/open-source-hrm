@@ -14,9 +14,12 @@ use Filament\Infolists\Components\{TextEntry};
 use Filament\Forms\Components\{Textarea, Select, DatePicker};
 use App\Models\{User, Employee};
 
+
 use Filament\Actions\{EditAction, DeleteAction, CreateAction, ViewAction};
 use Filament\Forms\Components\TextInput;
 
+// TODO: View task
+// TODO: Edit task
 class TaskBoard extends BoardPage
 {
     protected static string|null|\BackedEnum $navigationIcon = 'heroicon-o-view-columns';
@@ -28,6 +31,8 @@ class TaskBoard extends BoardPage
     public function board(Board $board): Board
     {
         return $board
+            ->searchable(['title', 'description'])
+
             ->query($this->getEloquentQuery())
             ->recordTitleAttribute('title')
             ->columnIdentifier('status')
@@ -50,8 +55,74 @@ class TaskBoard extends BoardPage
                     ->tooltip('Due date')
             ]))
             ->cardActions([
-                ViewAction::make()->model(Task::class),
-                EditAction::make()->model(Task::class),
+                ViewAction::make()
+                    ->model(Task::class)
+
+                ,
+                EditAction::make()
+                    ->model(Task::class)
+                    ->form([
+                        TextInput::make('title')->required(),
+                        Textarea::make('description'),
+                        Grid::make()
+                            ->columns(2)
+                            ->schema([
+                                Select::make('assignee_id')
+                                    ->required()
+                                    ->afterStateHydrated(function (Select $component, $state) {
+                                        if ($record = $component->getRecord()) {
+                                            $assigneeType = $record->assignee_type;
+                                            $assigneeId = $record->assignee_id;
+
+                                            if ($assigneeType && $assigneeId) {
+                                                $prefix = $assigneeType === Employee::class ? 'Employee_' : 'User_';
+                                                $component->state($prefix . $assigneeId);
+                                            }
+                                        }
+                                    })
+                                    ->label('Assignee')
+                                    ->options(
+                                        collect()
+                                            ->merge(
+                                                Employee::all()->mapWithKeys(
+                                                    fn($employee) => [
+                                                        "Employee_" . $employee->id =>
+                                                            $employee->email
+                                                    ],
+                                                ),
+                                            )
+                                            ->merge(
+                                                User::all()->mapWithKeys(
+                                                    fn($user) => [
+                                                        "User_" . $user->id =>
+                                                            $user->email
+                                                    ],
+                                                ),
+                                            ),
+                                    )
+                                ,
+                                DatePicker::make('due_date')
+                                    ->label('Due Date'),
+                            ])
+                    ])
+                    ->mutateFormDataUsing(function (array $data, array $arguments): array {
+                        $assigneeId = $data['assignee_id'];
+                        $assigneeType = null;
+                        $parsedAssigneeId = null;
+
+                        if (str_starts_with($assigneeId, 'Employee_')) {
+                            $parsedAssigneeId = str_replace('Employee_', '', $assigneeId);
+                            $assigneeType = Employee::class;
+                        } elseif (str_starts_with($assigneeId, 'User_')) {
+                            $parsedAssigneeId = str_replace('User_', '', $assigneeId);
+                            $assigneeType = User::class;
+                        }
+
+                        $data['assignee_id'] = $parsedAssigneeId;
+                        $data['assignee_type'] = $assigneeType;
+                        return $data;
+                    })
+                ,
                 DeleteAction::make()->model(Task::class),
             ])->cardAction('view')
             ->columns([
@@ -96,7 +167,7 @@ class TaskBoard extends BoardPage
                                     ->label('Due Date'),
                             ])
                     ])
-                    ->using(function (array $data, array $arguments) {
+                    ->mutateFormDataUsing(function (array $data, array $arguments) {
                         $status = $arguments['column'];
 
                         // Handle assignee_id parsing (employee_1 or user_1)
@@ -110,16 +181,11 @@ class TaskBoard extends BoardPage
                             $assigneeId = str_replace('User_', '', $assigneeId);
                             $assigneeType = User::class;
                         }
-
-                        return Task::create([
-                            'title' => $data['title'],
-                            'description' => $data['description'],
-                            'assignee_id' => $assigneeId,
-                            'assignee_type' => $assigneeType,
-                            'due_date' => $data['due_date'],
-                            'status' => $status,
-                            'position' => $this->getBoardPositionInColumn($arguments['column'])
-                        ]);
+                        $data['assignee_id'] = $assigneeId;
+                        $data['assignee_type'] = $assigneeType;
+                        $data['status'] = $arguments['column'] ?? $data['status'] ?? null;
+                        $data['position'] = $this->getBoardPositionInColumn($arguments['column']);
+                        return $data;
                     })
 
             ])
