@@ -10,6 +10,9 @@ use Guava\Calendar\ValueObjects\CalendarEvent;
 use Guava\Calendar\Filament\Actions\{CreateAction, EditAction, DeleteAction};
 use Filament\Forms\Components\{TextInput, Select, Textarea, Checkbox, DateTimePicker, Toggle};
 use Filament\Schemas\Components\{Grid};
+use Guava\Calendar\ValueObjects\EventDropInfo;
+use Illuminate\Database\Eloquent\Model;
+use Guava\Calendar\ValueObjects\EventResizeInfo;
 class AllCalendarWidget extends CalendarWidget
 {
     protected static ?string $title = 'Calendar';
@@ -17,6 +20,8 @@ class AllCalendarWidget extends CalendarWidget
     protected bool $eventDragEnabled = true;
     protected bool $dateClickEnabled = true;
     protected bool $eventClickEnabled = true;
+    protected bool $eventResizeEnabled = true;
+
 
 
     public function createEventAction(): CreateAction
@@ -111,6 +116,26 @@ class AllCalendarWidget extends CalendarWidget
             ->model(Event::class);
 
     }
+    protected function onEventDrop(EventDropInfo $info, Model $event): bool
+    {
+
+
+        $event->update([
+            'start_time' => $info->event->getStart(),
+            'end_time' => $info->event->getEnd()
+        ]);
+        return true;
+
+    }
+    // protected function onEventResize(EventResizeInfo $info, Event $event): void
+    // {
+    //     $event->update([
+    //         'end_time' => $info->end,
+    //     ]);
+
+
+    // }
+
 
     public function getHeaderActions(): array
     {
@@ -147,7 +172,12 @@ class AllCalendarWidget extends CalendarWidget
             ->where(function ($query) use ($start, $end) {
                 $query
                     ->orWhereBetween('end_time', [$start, $end])
-                    ->whereBetween('start_time', [$start, $end]);
+                    ->whereBetween('start_time', [$start, $end])
+                    ->orWhere(function ($query) use ($start, $end) {
+                        $query->where('start_time', '<', $start)
+                            ->where('end_time', '>', $end);
+                    });
+
 
             });
     }
