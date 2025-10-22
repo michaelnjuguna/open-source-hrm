@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Models\Task;
 
 use Filament\Schemas\Components\Grid;
+use Filament\Support\Enums\FontWeight;
 use Illuminate\Database\Eloquent\Builder;
 use Relaticle\Flowforge\Board;
 use Relaticle\Flowforge\BoardPage;
@@ -18,8 +19,6 @@ use App\Models\{User, Employee};
 use Filament\Actions\{EditAction, DeleteAction, CreateAction, ViewAction};
 use Filament\Forms\Components\TextInput;
 
-// TODO: View task
-// TODO: Edit task
 class TaskBoard extends BoardPage
 {
     protected static string|null|\BackedEnum $navigationIcon = 'heroicon-o-view-columns';
@@ -57,7 +56,31 @@ class TaskBoard extends BoardPage
             ->cardActions([
                 ViewAction::make()
                     ->model(Task::class)
+                    ->schema([
+                        TextEntry::make('title')
+                            ->weight(FontWeight::Bold)
+                            ->hiddenLabel()
+                            ->hint('Title')
+                        ,
+                        TextEntry::make('description')
+                            ->hint('Description')
+                            ->hiddenLabel()
+                        ,
+                        Grid::make(2)
+                            ->schema([
+                                TextEntry::make('email')
+                                    ->hiddenLabel()
+                                    ->hint('Email')
+                                    ->icon('heroicon-o-user')
+                                    ->copyable()
+                                ,
+                                TextEntry::make('due_date')
+                                    ->hiddenLabel()
+                                    ->hint('Due date')
+                                    ->icon('heroicon-o-calendar-days')
+                            ])
 
+                    ])
                 ,
                 EditAction::make()
                     ->model(Task::class)
