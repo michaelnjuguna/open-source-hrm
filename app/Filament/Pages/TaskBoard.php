@@ -88,7 +88,7 @@ class TaskBoard extends BoardPage
                         TextInput::make('title')->required(),
                         Textarea::make('description'),
                         Grid::make()
-                            ->columns(2)
+                            ->columns(3)
                             ->schema([
                                 Select::make('assignee_id')
                                     ->required()
@@ -123,6 +123,13 @@ class TaskBoard extends BoardPage
                                                 ),
                                             ),
                                     )
+                                ,
+                                Select::make('status')
+                                    ->options([
+                                        'todo' => 'Todo',
+                                        'in_progress' => 'In progress',
+                                        'completed' => 'Completed'
+                                    ])
                                 ,
                                 DatePicker::make('due_date')
                                     ->label('Due Date'),
