@@ -2,6 +2,8 @@
 
 namespace App\Filament\Widgets;
 use App\Models\Event;
+use Filament\Actions\ViewAction;
+use Filament\Infolists\Components\TextEntry;
 use \Guava\Calendar\Filament\CalendarWidget;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -109,6 +111,42 @@ class AllCalendarWidget extends CalendarWidget
             ])
         ;
     }
+    public function viewEventAction(): ViewAction
+    {
+        return $this->viewAction()
+            ->icon('heroicon-o-eye')
+            ->schema([
+                Grid::make(2)
+                    ->schema([
+                        TextEntry::make('title')
+                            ->hiddenLabel()
+                            ->hint('Title'),
+                        TextEntry::make('type')
+                            ->hiddenLabel()
+                            ->badge()
+                            ->color(fn($record) => match ($record->type) {
+                                'meeting' => 'info',
+                                'appointment' => 'success',
+                                'deadline' => 'danger',
+                                'event' => 'warning',
+                                default => 'gray',
+                            })
+                            ->hint('Type'),
+
+                    ]),
+                TextEntry::make('description')
+                    ->hiddenLabel()
+                    ->hint('Description'),
+                Grid::make(2)
+                    ->schema([
+                        TextEntry::make('start_time')
+                            ->dateTime(),
+                        TextEntry::make('end_time')
+                            ->dateTime()
+                    ])
+            ])
+        ;
+    }
 
     public function deleteEventAction(): DeleteAction
     {
@@ -159,7 +197,7 @@ class AllCalendarWidget extends CalendarWidget
     public function getEventClickContextMenuActions(): array
     {
         return [
-            $this->viewAction(),
+            $this->viewEventAction(),
             $this->editEventAction(),
             $this->deleteEventAction(),
         ];
