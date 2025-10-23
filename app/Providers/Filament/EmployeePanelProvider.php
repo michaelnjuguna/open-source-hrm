@@ -23,6 +23,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Resources\Messages\MessageResource;
+use App\Filament\Widgets\AllCalendarWidget;
 
 class EmployeePanelProvider extends PanelProvider
 {
@@ -49,15 +50,14 @@ class EmployeePanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
                 TaskBoard::class,
-                // TasksBoardPage::class,
             ])
             ->resources([
                 MessageResource::class
             ])
             ->discoverWidgets(in: app_path('Filament/Employee/Widgets'), for: 'App\\Filament\\Employee\\Widgets')
             ->widgets([
-                AccountWidget::class,
-                FilamentInfoWidget::class,
+
+                AllCalendarWidget::class
             ])
 
             ->navigationGroups([

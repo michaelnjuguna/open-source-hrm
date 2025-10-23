@@ -4,3 +4,5 @@
 @source '../../../../resources/views/filament/**/*';
 
 @source "../../../../vendor/relaticle/flowforge/resources/views/**/*.blade.php";
+@source '../../../../vendor/guava/calendar/resources/**/*';
+@import "../../../../vendor/guava/calendar/resources/css/theme.css";
