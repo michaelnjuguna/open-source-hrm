@@ -116,7 +116,7 @@ class AllCalendarWidget extends CalendarWidget
             ->model(Event::class);
 
     }
-    protected function onEventDrop(EventDropInfo $info, Model $event): bool
+    public function onEventDrop(EventDropInfo $info, Model $event): bool
     {
 
 
@@ -127,14 +127,16 @@ class AllCalendarWidget extends CalendarWidget
         return true;
 
     }
-    // protected function onEventResize(EventResizeInfo $info, Event $event): void
-    // {
-    //     $event->update([
-    //         'end_time' => $info->end,
-    //     ]);
+    public function onEventResize(EventResizeInfo $info, Model $event): bool
+    {
+        // dd($info);
+        $event->update([
+            'start_time' => $info->event->getStart(),
+            'end_time' => $info->event->getEnd()
+        ]);
 
-
-    // }
+        return true;
+    }
 
 
     public function getHeaderActions(): array
@@ -154,7 +156,7 @@ class AllCalendarWidget extends CalendarWidget
         ];
     }
 
-    protected function getEventClickContextMenuActions(): array
+    public function getEventClickContextMenuActions(): array
     {
         return [
             $this->viewAction(),
