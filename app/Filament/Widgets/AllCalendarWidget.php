@@ -7,8 +7,8 @@ use Filament\Infolists\Components\TextEntry;
 use \Guava\Calendar\Filament\CalendarWidget;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Guava\Calendar\ValueObjects\{FetchInfo, DateClickInfo};
-use Guava\Calendar\ValueObjects\CalendarEvent;
+use Guava\Calendar\ValueObjects\{FetchInfo};
+
 use Guava\Calendar\Filament\Actions\{CreateAction, EditAction, DeleteAction};
 use Filament\Forms\Components\{TextInput, Select, Textarea, Checkbox, DateTimePicker, Toggle};
 use Filament\Schemas\Components\{Grid};
