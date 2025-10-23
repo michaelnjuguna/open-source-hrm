@@ -2,6 +2,11 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Pages\Dashboard;
+use App\Filament\Pages\TaskBoard;
+
+use Filament\Widgets\AccountWidget;
+use Filament\Widgets\FilamentInfoWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -17,6 +22,8 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Filament\Resources\Messages\MessageResource;
+use App\Filament\Widgets\AllCalendarWidget;
 
 class EmployeePanelProvider extends PanelProvider
 {
@@ -28,25 +35,31 @@ class EmployeePanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Cyan,
             ])
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->spa()
             ->login()
             ->passwordReset()
             ->profile()
             ->brandName(
-                'Employee Portal',
+                'Portal',
             )
+
             ->authGuard('employee')
             ->discoverResources(in: app_path('Filament/Employee/Resources'), for: 'App\\Filament\\Employee\\Resources')
             ->discoverPages(in: app_path('Filament/Employee/Pages'), for: 'App\\Filament\\Employee\\Pages')
             ->pages([
-                Pages\Dashboard::class,
-                \App\Filament\Pages\TasksBoardPage::class,
+                Dashboard::class,
+                TaskBoard::class,
+            ])
+            ->resources([
+                MessageResource::class
             ])
             ->discoverWidgets(in: app_path('Filament/Employee/Widgets'), for: 'App\\Filament\\Employee\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+
+                AllCalendarWidget::class
             ])
+
             ->navigationGroups([
                 'Work space'
             ])

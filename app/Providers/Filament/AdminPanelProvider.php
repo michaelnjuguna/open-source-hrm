@@ -2,7 +2,9 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Resources\DepartmentResource\Widgets\StatsOverview;
+use Filament\Pages\Dashboard;
+use App\Filament\Pages\TaskBoard;
+use App\Filament\Resources\Departments\Widgets\StatsOverview;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -29,11 +31,7 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->spa()
-            // Footer
-            // ->renderHook(
-            //     PanelsRenderHook::FOOTER,
-            //     fn() => view('footer')
-            // )
+
             ->default()
             ->id('admin')
             ->path('/')
@@ -47,19 +45,17 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Sky,
             ])
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
-                Pages\Dashboard::class,
-                \App\Filament\Pages\TasksBoardPage::class,
-                // App\Filament\Pages\TasksBoardPage::class,
+                Dashboard::class,
+                TaskBoard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                    // Widgets\AccountWidget::class,
-                    // Widgets\FilamentInfoWidget::class,
                 StatsOverview::class,
-                \App\Filament\Resources\EmployeeResource\Widgets\StatsOverview::class,
+                \App\Filament\Resources\Employees\Widgets\StatsOverview::class,
             ])
             ->navigationGroups([
                 'Work space',

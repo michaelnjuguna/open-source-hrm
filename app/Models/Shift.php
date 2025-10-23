@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Shift extends Model
@@ -24,8 +25,8 @@ class Shift extends Model
     ];
     public function getDurationAttribute()
     {
-        $start = \Carbon\Carbon::parse($this->start_time);
-        $end = \Carbon\Carbon::parse($this->end_time);
+        $start = Carbon::parse($this->start_time);
+        $end = Carbon::parse($this->end_time);
         return $start->diffInMinutes($end);
     }
 }
