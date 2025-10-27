@@ -12,7 +12,7 @@ class MessageTable
     public static function configure(Table $table): Table
     {
         return $table
-
+            ->poll('1s')
             ->modifyQueryUsing(function ($query) {
                 $userId = Auth::id();
                 return $query->where(function ($query) use ($userId) {
