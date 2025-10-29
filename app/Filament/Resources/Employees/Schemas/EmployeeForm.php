@@ -49,7 +49,7 @@ class EmployeeForm
                     ->schema([
                         Grid::make(2)
                             ->schema([
-                                TextInput::make('email')->email()->required()->label('Email Address (this will be the password for the employee)')
+                                TextInput::make('email')->email()->required()->label('Email Address (this will be the default password for the employee)')
                                     ->unique(ignoreRecord: true)
 
                                 ,
