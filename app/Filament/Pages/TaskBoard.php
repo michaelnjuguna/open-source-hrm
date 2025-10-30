@@ -40,7 +40,7 @@ class TaskBoard extends BoardPage
                 TextEntry::make('email')
                     ->icon('heroicon-o-user')
                     ->hiddenLabel()
-                    ->tooltip('Email')
+                    ->tooltip('Assigned to')
                 ,
                 TextEntry::make('description')
                     ->hiddenLabel()
@@ -70,7 +70,7 @@ class TaskBoard extends BoardPage
                             ->schema([
                                 TextEntry::make('email')
                                     ->hiddenLabel()
-                                    ->hint('Email')
+                                    ->hint('Assigned to')
                                     ->icon('heroicon-o-user')
                                     ->copyable()
                                 ,
