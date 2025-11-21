@@ -38,7 +38,9 @@ class AdminPanelProvider extends PanelProvider
             ->passwordReset()
             ->profile()
             ->login()
-            // ->registration()
+
+            ->registration()
+            ->databaseNotifications()
             ->brandName(
                 'Admin Panel',
             )

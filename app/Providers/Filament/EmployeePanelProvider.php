@@ -35,6 +35,7 @@ class EmployeePanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Cyan,
             ])
+            ->databaseNotifications()
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->spa()
             ->login()
