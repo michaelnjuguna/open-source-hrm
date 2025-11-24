@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
+use App\Observers\MessageObserver;
 use App\Observers\TaskObserver;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
-use App\Models\Task;
+use App\Models\{Task, Message};
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureModels();
         $this->configureUrl();
         Task::observe(TaskObserver::class);
+        Message::observe(MessageObserver::class);
 
     }
     private function configureCommands(): void

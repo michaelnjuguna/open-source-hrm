@@ -10,7 +10,7 @@ class MessageForm
     {
         return $schema->components([
             //
-            TextInput::make("Subject")
+            TextInput::make("subject")
                 ->required()
                 ->maxLength(255)
                 ->columnSpanFull()
@@ -44,7 +44,7 @@ class MessageForm
             Select::make("receiver_type")
                 ->options([Employee::class, User::class])
                 ->hidden(),
-            RichEditor::make("content")->required()
+            RichEditor::make("content")
                 // ->extraAttributes(['style' => 'height: 400px;'])
                 ->columnSpanFull(),
         ]);

@@ -28,19 +28,22 @@ class CreateMessage extends CreateRecord
                 $receiverType = User::class;
             }
             $topic = Topic::create([
-                'subject' => $data['Subject'],
+                'subject' => $data['subject'],
                 'creator_type' => auth()->user() instanceof Employee ? Employee::class : User::class,
                 'creator_id' => auth()->id(),
                 'receiver_type' => $receiverType,
                 'receiver_id' => $actualId,
             ]);
+            Message::create(
+                [
 
-            $data['topic_id'] = $topic->id;
-            $data['sender_type'] = auth()->user() instanceof Employee ? Employee::class : User::class;
-            $data['sender_id'] = auth()->id();
-            $data['read_at'] = null;
-            $data['content'] = $data['content'] ?? '';
-            $message = Message::create($data);
+                    'topic_id' => $topic->id,
+                    'sender_type' => auth()->user() instanceof Employee ? Employee::class : User::class,
+                    'sender_id' => auth()->id(),
+                    'read_at' => null,
+                    'content' => $data['content']
+                ]
+            );
 
         }
         return $topic;
