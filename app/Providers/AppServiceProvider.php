@@ -3,8 +3,11 @@
 namespace App\Providers;
 
 use App\Observers\TaskObserver;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Task;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +25,29 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+        $this->configureCommands();
+        $this->configureModels();
+        $this->configureUrl();
         Task::observe(TaskObserver::class);
+
+    }
+    private function configureCommands(): void
+    {
+        DB::prohibitDestructiveCommands(
+            $this->app->environment('production')
+        );
+    }
+    private function configureModels(): void
+    {
+        //
+        Model::shouldBeStrict();
+        Model::unguard();
+    }
+    public function configureUrl(): void
+    {
+        if ($this->app->environment('production')) {
+
+            URL::forceScheme('https');
+        }
     }
 }

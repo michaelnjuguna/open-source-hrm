@@ -226,6 +226,6 @@ class TaskBoard extends BoardPage
 
     public function getEloquentQuery(): Builder
     {
-        return Task::query();
+        return Task::query()->with('assignee');
     }
 }

@@ -21,7 +21,7 @@ class Task extends Model
     ];
 
     protected $casts = [
-        'due_date' => 'date',
+        'due_date' => 'datetime',
     ];
     protected $table = 'tasks';
     protected $appends = ['date', 'email'];
