@@ -18,7 +18,7 @@ class CreateMessage extends CreateRecord
         $topic = null;
         foreach ($data['receiver_id'] as $receiverId) {
 
-            // $receiverType = Employee::where('id', $receiverId)->exists() ? Employee::class : User::class;
+
 
             if (str_starts_with($receiverId, 'Employee_')) {
                 $actualId = str_replace('Employee_', '', $receiverId);
