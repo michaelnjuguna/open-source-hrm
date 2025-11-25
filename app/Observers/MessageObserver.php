@@ -6,7 +6,7 @@ use App\Filament\Resources\Messages\MessageResource;
 use App\Models\{Message, Employee, User};
 use Filament\Notifications\Notification;
 use Filament\Actions\Action;
-use Illuminate\Support\Facades\Auth;
+
 class MessageObserver
 {
     /**
@@ -22,56 +22,30 @@ class MessageObserver
         } elseif ($message->sender->is($topic->receiver)) {
             $recipient = $topic->creator;
         }
-        $url = null;
-        if ($recipient instanceof Employee) {
+        $url = MessageResource::getUrl('view', ['record' => $topic]);
+
+        if ($recipient instanceof User && $message->sender instanceof Employee) {
+            $url = str_replace('/portal', '', $url);
+        } elseif ($recipient instanceof Employee && $message->sender instanceof User) {
             $parsed = parse_url(MessageResource::getUrl('view', ['record' => $topic]));
             $url = url('/portal' . $parsed['path']);
-
-        } else {
-
-            $baseUrl = MessageResource::getUrl('view', ['record' => $topic]);
-            $parsed = parse_url($baseUrl);
-            $path = $parsed['path'];
-
-            // Remove /portal prefix if present
-            $path = preg_replace('#^/portal#', '', $path);
-            $url = url($path);
-
         }
-        // dd($recipient, $url);
 
-        if ($message->sender->is($topic->creator)) {
 
-            Notification::make()
-                ->title('New message')
-                ->body("{$topic->subject}")
-                ->actions([
-                    Action::make('view')
-                        ->url($url)
-                        ->markAsRead()
-                        ->close()
-                        ->label('View Conversation'),
-                ])
 
-                ->info()
+        Notification::make()
+            ->title('New message')
+            ->body("{$topic->subject}")
+            ->actions([
+                Action::make('view')
+                    ->url($url)
+                    ->markAsRead()
+                    ->close()
+                    ->label('View Conversation'),
+            ])
+            ->info()
+            ->sendToDatabase($recipient);
 
-                ->sendToDatabase($recipient);
-        } elseif ($message->sender->is($topic->receiver)) {
-            Notification::make()
-                ->title('New message')
-                ->body("{$topic->subject}")
-                ->actions([
-                    Action::make('view')
-                        ->markAsRead()
-                        ->url($url)
-                        ->close()
-
-                        ->label('View Conversation'),
-                ])
-                ->info()
-
-                ->sendToDatabase($recipient);
-        }
     }
 
     /**
