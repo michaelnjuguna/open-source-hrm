@@ -16,7 +16,7 @@ class MessageInfolist
 
             ->components([
                 RepeatableEntry::make('message')
-                    ->poll('1s')
+                    ->poll('3s')
                     ->label('')
                     ->schema([
                         \Filament\Schemas\Components\Grid::make(5)

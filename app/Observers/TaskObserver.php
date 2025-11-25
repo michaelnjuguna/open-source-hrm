@@ -21,6 +21,7 @@ class TaskObserver
                 ->actions([
                     Action::make('view')
                         ->url(TaskBoard::getUrl())
+                        ->markAsRead()
                         ->label('View Task'),
                 ])
                 ->success()
@@ -42,6 +43,7 @@ class TaskObserver
                 ->actions([
                     Action::make('view')
                         ->url(TaskBoard::getUrl())
+                        ->markAsRead()
                         ->label('View Task'),
                 ])
                 ->info()

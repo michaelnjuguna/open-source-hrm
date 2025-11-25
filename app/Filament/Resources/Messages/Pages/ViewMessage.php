@@ -20,7 +20,7 @@ use Filament\Support\Enums\FontWeight;
 class ViewMessage extends ViewRecord
 {
     protected static string $resource = MessageResource::class;
-    public $poll = '1s';
+    public $poll = '3s';
     public function getTitle(): string
     {
         return 'View Conversation';
