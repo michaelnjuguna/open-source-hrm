@@ -192,6 +192,7 @@ class TaskBoard extends BoardPage
                                                 ),
                                             ),
                                     )
+                                    ->searchable()
                                 ,
                                 DatePicker::make('due_date')
                                     ->label('Due Date'),

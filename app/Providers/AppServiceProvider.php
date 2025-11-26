@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Department;
+use App\Observers\DepartmentObserver;
 use App\Observers\MessageObserver;
 use App\Observers\TaskObserver;
 use Illuminate\Support\Facades\URL;
@@ -31,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureUrl();
         Task::observe(TaskObserver::class);
         Message::observe(MessageObserver::class);
+        Department::observe(DepartmentObserver::class);
 
     }
     private function configureCommands(): void
