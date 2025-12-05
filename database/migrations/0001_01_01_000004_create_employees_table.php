@@ -12,13 +12,13 @@ return new class extends Migration {
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string('employee_number')->unique();
+            $table->string('employee_code')->nullable();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email')->unique();
-            $table->string('phone')->nullable();
+            $table->string('phone')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('national_id')->unique();
+            $table->string('national_id')->nullable()->unique();
             $table->string('kra_pin')->unique()->nullable();
 
             $table->string('emergency_contact_name')->nullable();
@@ -35,7 +35,7 @@ return new class extends Migration {
                 ->constrained('positions')
                 ->onDelete('set null');
             $table->enum('employment_type', ['Permanent', 'Contract', 'Casual']);
-            $table->date('hire_date');
+            $table->date('hire_date')->nullable();
             $table->date('termination_date')->nullable();
             $table->boolean('is_active')->default(true);
             $table->string('next_of_kin_name')->nullable();
