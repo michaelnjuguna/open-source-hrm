@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('topics', function (Blueprint $table) {
             $table->id();
             $table->string('subject');
-            $table->morphs('creator');
-            $table->morphs('receiver');
+            $table->foreignId('creator');
+            $table->foreignId('receiver');
             $table->timestamps();
 
 
@@ -22,7 +22,7 @@ return new class extends Migration {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('topic_id')->constrained()->cascadeOnDelete();
-            $table->morphs('sender');
+            $table->foreignId('sender');
             $table->text('content');
             $table->datetime('read_at')->nullable();
             $table->timestamps();
