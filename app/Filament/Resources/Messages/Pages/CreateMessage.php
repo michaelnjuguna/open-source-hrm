@@ -25,11 +25,11 @@ class CreateMessage extends CreateRecord
                 $receiverType = Employee::class;
             } else {
                 $actualId = str_replace('User_', '', $receiverId);
-                $receiverType = User::class;
+                $receiverType = Employee::class;
             }
             $topic = Topic::create([
                 'subject' => $data['subject'],
-                'creator_type' => auth()->user() instanceof Employee ? Employee::class : User::class,
+                'creator_type' => auth()->user() instanceof Employee ? Employee::class : Employee::class,
                 'creator_id' => auth()->id(),
                 'receiver_type' => $receiverType,
                 'receiver_id' => $actualId,
@@ -38,7 +38,7 @@ class CreateMessage extends CreateRecord
                 [
 
                     'topic_id' => $topic->id,
-                    'sender_type' => auth()->user() instanceof Employee ? Employee::class : User::class,
+                    'sender_type' => auth()->user() instanceof Employee ? Employee::class : Employee::class,
                     'sender_id' => auth()->id(),
                     'read_at' => null,
                     'content' => $data['content']

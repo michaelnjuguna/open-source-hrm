@@ -41,6 +41,7 @@ class AdminPanelProvider extends PanelProvider
 
             ->registration()
             ->databaseNotifications()
+            ->authPasswordBroker('employees')
             ->brandName(
                 'Admin Panel',
             )

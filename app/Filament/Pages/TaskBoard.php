@@ -145,7 +145,7 @@ class TaskBoard extends BoardPage
                             $assigneeType = Employee::class;
                         } elseif (str_starts_with($assigneeId, 'User_')) {
                             $parsedAssigneeId = str_replace('User_', '', $assigneeId);
-                            $assigneeType = User::class;
+                            $assigneeType = Employee::class;
                         }
 
                         $data['assignee_id'] = $parsedAssigneeId;
@@ -210,7 +210,7 @@ class TaskBoard extends BoardPage
                             $assigneeType = Employee::class;
                         } elseif (str_starts_with($assigneeId, 'User_')) {
                             $assigneeId = str_replace('User_', '', $assigneeId);
-                            $assigneeType = User::class;
+                            $assigneeType = Employee::class;
                         }
                         $data['assignee_id'] = $assigneeId;
                         $data['assignee_type'] = $assigneeType;

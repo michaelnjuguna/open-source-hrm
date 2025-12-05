@@ -17,7 +17,7 @@ class ListMessages extends ListRecords
     public function getTabs(): array
     {
         $user = Auth::user();
-        $type = $user instanceof Employee ? Employee::class : User::class;
+        $type = $user instanceof Employee ? Employee::class : Employee::class;
         return [
             'all' => Tab::make()
 

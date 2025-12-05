@@ -42,7 +42,7 @@ class MessageForm
                 ->columnSpanFull()
                 ->searchable(["email"]),
             Select::make("receiver_type")
-                ->options([Employee::class, User::class])
+                ->options([Employee::class, Employee::class])
                 ->hidden(),
             RichEditor::make("content")
                 // ->extraAttributes(['style' => 'height: 400px;'])
