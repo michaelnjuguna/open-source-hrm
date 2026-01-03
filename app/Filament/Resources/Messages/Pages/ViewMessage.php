@@ -66,7 +66,7 @@ class ViewMessage extends ViewRecord
                 ->visible(
                     fn() =>
                     $this->record->receiver_id === auth()->id()
-                    && $this->record->receiver_type === auth()->user()->getMorphClass()
+
                 )
 
 
@@ -85,7 +85,6 @@ class ViewMessage extends ViewRecord
                     // $data['sender_id'] = auth()->id();
                     Message::create([
                         'topic_id' => $this->record->id,
-                        'sender_type' => auth()->user()->getMorphClass(),
                         'sender_id' => auth()->id(),
                         'content' => $data['content'],
                     ]);

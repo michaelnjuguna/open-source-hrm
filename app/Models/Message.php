@@ -11,14 +11,19 @@ class Message extends Model
     protected $fillable = [
         'topic_id',
         'sender_id',
-        "sender_type",
         'content',
         'read_at'
+    ];
+    protected $casts = [
+        'topic_id' => 'integer',
+        'sender_id' => 'integer',
+        'content' => 'string',
+        'read_at' => 'datetime',
     ];
     protected $with = ['sender'];
     public function sender()
     {
-        return $this->morphTo();
+        return $this->belongsTo(Employee::class, 'sender_id');
     }
 
 

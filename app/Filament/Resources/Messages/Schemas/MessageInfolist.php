@@ -81,7 +81,6 @@ class MessageInfolist
                         ->action(function ($data, $livewire) {
                             Message::create([
                                 'topic_id' => $livewire->record->id,
-                                'sender_type' => auth()->user()->getMorphClass(),
                                 'sender_id' => auth()->id(),
                                 'content' => $data['content'],
                             ]);

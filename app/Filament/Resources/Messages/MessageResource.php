@@ -59,22 +59,22 @@ class MessageResource extends Resource
                 // Case 1: User is the receiver of the topic
                 $query
                     ->where(function ($q) use ($user, $receiverType) {
-                    $q->where("topics.receiver", $user->id)
+                    $q->where("topics.receiver_id", $user->id)
 
                         ->whereNot(function ($q2) use ($user) {
                             $q2->where(
-                                "messages.sender",
+                                "messages.sender_id",
                                 $user->id,
                             );
                         });
                 })
                     // Case 2: User is the sender of the topic
                     ->orWhere(function ($q) use ($user, $receiverType) {
-                    $q->where("topics.creator", $user->id)
+                    $q->where("topics.creator_id", $user->id)
 
                         ->whereNot(function ($q2) use ($user) {
                             $q2->where(
-                                "messages.sender",
+                                "messages.sender_id",
                                 $user->id,
                             );
                         });

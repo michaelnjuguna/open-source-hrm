@@ -9,6 +9,9 @@
   - Employee portal, REST
   - Admin portal, GraphQL
 - Add tests
+  - Setup
+  - Messages
+  - Tasks
 - Add strict typing
 - Use Redis Queue
 - Add translations
@@ -29,8 +32,11 @@
 
 ## In Progress
 
-- Fix auth
+- Fix merging users tables
+- Tests
 
 ## Done
+
+- Fix auth
 
 - Migrate users to one table
