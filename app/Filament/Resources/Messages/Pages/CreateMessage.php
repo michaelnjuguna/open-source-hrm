@@ -15,36 +15,22 @@ class CreateMessage extends CreateRecord
     protected function handleRecordCreation(array $data): topic
     {
 
-        $topic = null;
-        foreach ($data['receiver_id'] as $receiverId) {
+        // $topic = null;
+        foreach ($data['receiver'] as $receiverId) {
 
-
-
-            if (str_starts_with($receiverId, 'Employee_')) {
-                $actualId = str_replace('Employee_', '', $receiverId);
-                $receiverType = Employee::class;
-            } else {
-                $actualId = str_replace('User_', '', $receiverId);
-                $receiverType = Employee::class;
-            }
             $topic = Topic::create([
                 'subject' => $data['subject'],
-                'creator_type' => auth()->user() instanceof Employee ? Employee::class : Employee::class,
                 'creator_id' => auth()->id(),
-                'receiver_type' => $receiverType,
-                'receiver_id' => $actualId,
+                'receiver_id' => $receiverId,
             ]);
             Message::create(
                 [
-
                     'topic_id' => $topic->id,
-                    'sender_type' => auth()->user() instanceof Employee ? Employee::class : Employee::class,
                     'sender_id' => auth()->id(),
+                    'content' => $data['content'],
                     'read_at' => null,
-                    'content' => $data['content']
                 ]
             );
-
         }
         return $topic;
 
