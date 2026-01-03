@@ -16,5 +16,6 @@ class RolePermissionSeeder extends Seeder
         //
         $admin = Role::firstOrCreate(['name' => 'admin']);
         $employee = Role::firstOrCreate(['name' => 'employee']);
+        $employee = Role::firstOrCreate(['name' => 'guest']);
     }
 }

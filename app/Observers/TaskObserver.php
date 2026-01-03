@@ -32,16 +32,16 @@ class TaskObserver
 
     private function sendTaskNotification(Task $task, string $title): void
     {
-        if ($task->assignee) {
-            $recipient = $task->assignee;
+        if ($task->assignee_id) {
+            $recipient = $task->assignee_id;
             $sender = Auth::user();
             $url = TaskBoard::getUrl();
-            if ($recipient instanceof Employee && $sender instanceof User) {
-                $parsedUrl = parse_url(TaskBoard::getUrl());
-                $url = url('/portal' . $parsedUrl['path']);
-            } elseif ($sender instanceof Employee && $recipient instanceof User) {
-                $url = str_replace('/portal', '', $url);
-            }
+            // if ($recipient instanceof Employee && $sender instanceof User) {
+            //     $parsedUrl = parse_url(TaskBoard::getUrl());
+            //     $url = url('/portal' . $parsedUrl['path']);
+            // } elseif ($sender instanceof Employee && $recipient instanceof User) {
+            //     $url = str_replace('/portal', '', $url);
+            // }
             Notification::make()
                 ->title($title)
                 ->body("{$task->title}")
@@ -52,7 +52,7 @@ class TaskObserver
                         ->label('View Task'),
                 ])
                 ->info()
-                ->sendToDatabase($task->assignee);
+                ->sendToDatabase($task->assignee_id);
         }
     }
     /**

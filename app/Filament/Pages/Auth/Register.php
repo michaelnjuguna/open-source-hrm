@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages\Auth;
 
+use App\Models\Employee;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 // use Filament\Pages\Auth\Register as BaseRegister;
@@ -9,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Auth\Pages\Register as BaseRegister;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Hash;
 
 class Register extends BaseRegister
 {
@@ -39,28 +41,27 @@ class Register extends BaseRegister
                 $this->getPasswordConfirmationFormComponent(),
             ]);
     }
+    protected function handleRegistration(array $data): Employee
+    {
+        $admin = $this->createUser($data);
+        $admin->assignRole('admin');
 
-    // protected function getForms(): array
-    // {
-    //     return [
-    //         'form' => $this->form(
-    //             $this->makeForm()
-    //                 ->schema([
-    //                     TextInput::make('first_name')
-    //                         ->label('First Name')
-    //                         ->required()
-    //                         ->maxLength(255)
-    //                         ->autofocus(),
-    //                     TextInput::make('last_name')
-    //                         ->label('Last Name')
-    //                         ->required()
-    //                         ->maxLength(255),
-    //                     $this->getEmailFormComponent(),
-    //                     $this->getPasswordFormComponent(),
-    //                     $this->getPasswordConfirmationFormComponent(),
-    //                 ])
-    //                 ->statePath('data'),
-    //         ),
-    //     ];
-    // }
+        return $admin;
+    }
+    protected function createUser(array $data): Employee
+    {
+        $employee = Employee::create([
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'employee_code' => $data['employee_code'] ?? null,
+            'phone' => $data['phone'] ?? null,
+        ]);
+
+
+        return $employee;
+    }
+
+
 }

@@ -15,12 +15,15 @@ class Task extends Model
         'status',
         'sort_order',
         'assignee_id',
-        'assignee_type',
+
         'due_date',
         'position'
     ];
-
+    // TODO: Cast all fillables
     protected $casts = [
+        'title' => 'string',
+        'description' => 'string',
+
         'due_date' => 'datetime',
     ];
     protected $table = 'tasks';
