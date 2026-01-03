@@ -29,8 +29,10 @@
 
 ## In Progress
 
-- Fix auth
+- Fix merging users tables
 
 ## Done
+
+- Fix auth
 
 - Migrate users to one table
