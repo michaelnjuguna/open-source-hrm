@@ -19,19 +19,22 @@ class Task extends Model
         'due_date',
         'position'
     ];
-    // TODO: Cast all fillables
+
     protected $casts = [
         'title' => 'string',
         'description' => 'string',
-
+        'status' => 'string',
+        'sort_order' => 'integer',
+        'assignee_id' => 'integer',
         'due_date' => 'datetime',
+        'position' => 'integer',
     ];
     protected $table = 'tasks';
     protected $appends = ['date', 'email'];
 
     public function assignee()
     {
-        return $this->morphTo();
+        return $this->belongsTo(Employee::class, 'assignee_id');
     }
 
 

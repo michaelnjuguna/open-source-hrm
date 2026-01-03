@@ -33,7 +33,7 @@ class TaskObserver
     private function sendTaskNotification(Task $task, string $title): void
     {
         if ($task->assignee_id) {
-            $recipient = $task->assignee_id;
+            $recipient = Employee::find($task->assignee_id);
             $sender = Auth::user();
             $url = TaskBoard::getUrl();
             // if ($recipient instanceof Employee && $sender instanceof User) {
@@ -52,7 +52,7 @@ class TaskObserver
                         ->label('View Task'),
                 ])
                 ->info()
-                ->sendToDatabase($task->assignee_id);
+                ->sendToDatabase($recipient);
         }
     }
     /**
