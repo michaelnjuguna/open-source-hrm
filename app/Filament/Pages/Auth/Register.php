@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 
 class Register extends BaseRegister
 {
+
     public function form(Schema $schema): Schema
     {
         return $schema
@@ -45,7 +46,7 @@ class Register extends BaseRegister
     {
         $admin = $this->createUser($data);
         $admin->assignRole('admin');
-
+        $this->redirect('/');
         return $admin;
     }
     protected function createUser(array $data): Employee

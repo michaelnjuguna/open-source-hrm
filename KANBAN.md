@@ -8,10 +8,10 @@
 - Build API
   - Employee portal, REST
   - Admin portal, GraphQL
-- Add tests
-  - Setup
-  - Messages
-  - Tasks
+- No testing filament code
+- Testing
+  - Resources
+  - Auth
 - Add strict typing
 - Use Redis Queue
 - Add translations
