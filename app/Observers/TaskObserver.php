@@ -2,10 +2,13 @@
 
 namespace App\Observers;
 
+use App\Models\Employee;
 use App\Models\Task;
 use App\Filament\Pages\TaskBoard;
+use App\Models\User;
 use Filament\Notifications\Notification;
 use Filament\Actions\Action;
+use Illuminate\Support\Facades\Auth;
 class TaskObserver
 {
     /**
@@ -13,20 +16,8 @@ class TaskObserver
      */
     public function created(Task $task): void
     {
-        //
-        if ($task->assignee) {
-            Notification::make()
-                ->title('New Task Assigned')
-                ->body("{$task->title}")
-                ->actions([
-                    Action::make('view')
-                        ->url(TaskBoard::getUrl())
-                        ->markAsRead()
-                        ->label('View Task'),
-                ])
-                ->success()
-                ->sendToDatabase($task->assignee);
-        }
+
+        $this->sendTaskNotification($task, 'New Task Assigned');
 
     }
 
@@ -36,21 +27,34 @@ class TaskObserver
     public function updated(Task $task): void
     {
         //
-        if ($task->assignee) {
+        $this->sendTaskNotification($task, 'Task Updated');
+    }
+
+    private function sendTaskNotification(Task $task, string $title): void
+    {
+        if ($task->assignee_id) {
+            $recipient = Employee::find($task->assignee_id);
+            $sender = Auth::user();
+            $url = TaskBoard::getUrl();
+            // if ($recipient instanceof Employee && $sender instanceof User) {
+            //     $parsedUrl = parse_url(TaskBoard::getUrl());
+            //     $url = url('/portal' . $parsedUrl['path']);
+            // } elseif ($sender instanceof Employee && $recipient instanceof User) {
+            //     $url = str_replace('/portal', '', $url);
+            // }
             Notification::make()
-                ->title('Task Updated')
+                ->title($title)
                 ->body("{$task->title}")
                 ->actions([
                     Action::make('view')
-                        ->url(TaskBoard::getUrl())
+                        ->url($url)
                         ->markAsRead()
                         ->label('View Task'),
                 ])
                 ->info()
-                ->sendToDatabase($task->assignee);
+                ->sendToDatabase($recipient);
         }
     }
-
     /**
      * Handle the Task "deleted" event.
      */

@@ -14,7 +14,8 @@
         "guava/calendar": "^2.0",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "relaticle/flowforge": "^2.0"
+        "relaticle/flowforge": "^2.0",
+        "spatie/laravel-permission": "^6.23"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -23,7 +24,7 @@
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
-        "pestphp/pest": "^4.1"
+        "phpunit/phpunit": "^12.4"
     },
     "autoload": {
         "psr-4": {
@@ -73,7 +74,6 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true,
             "php-http/discovery": true
         }
     },

@@ -13,7 +13,7 @@ use Relaticle\Flowforge\Column;
 use Filament\Schemas\Schema;
 use Filament\Infolists\Components\{TextEntry};
 use Filament\Forms\Components\{Textarea, Select, DatePicker};
-use App\Models\{User, Employee};
+use App\Models\{Employee};
 
 
 use Filament\Actions\{EditAction, DeleteAction, CreateAction, ViewAction};
@@ -92,36 +92,29 @@ class TaskBoard extends BoardPage
                             ->schema([
                                 Select::make('assignee_id')
                                     ->required()
-                                    ->afterStateHydrated(function (Select $component, $state) {
-                                        if ($record = $component->getRecord()) {
-                                            $assigneeType = $record->assignee_type;
-                                            $assigneeId = $record->assignee_id;
+                                    // ->afterStateHydrated(function (Select $component, $state) {
+                                    //     if ($record = $component->getRecord()) {
+                                    //         // $assigneeType = $record->assignee_type;
+                                    //         $assigneeId = $record->assignee_id;
 
-                                            if ($assigneeType && $assigneeId) {
-                                                $prefix = $assigneeType === Employee::class ? 'Employee_' : 'User_';
-                                                $component->state($prefix . $assigneeId);
-                                            }
-                                        }
-                                    })
+                                    //         // if ($assigneeType && $assigneeId) {
+                                    //         //     $prefix = $assigneeType === Employee::class ? 'Employee_' : 'User_';
+                                    //         //     $component->state($prefix . $assigneeId);
+                                    //         // }
+                                    //     }
+                                    // })
                                     ->label('Assignee')
                                     ->options(
                                         collect()
                                             ->merge(
                                                 Employee::all()->mapWithKeys(
                                                     fn($employee) => [
-                                                        "Employee_" . $employee->id =>
+                                                        $employee->id =>
                                                             $employee->email
                                                     ],
                                                 ),
                                             )
-                                            ->merge(
-                                                User::all()->mapWithKeys(
-                                                    fn($user) => [
-                                                        "User_" . $user->id =>
-                                                            $user->email
-                                                    ],
-                                                ),
-                                            ),
+
                                     )
                                 ,
                                 Select::make('status')
@@ -135,23 +128,23 @@ class TaskBoard extends BoardPage
                                     ->label('Due Date'),
                             ])
                     ])
-                    ->mutateFormDataUsing(function (array $data, array $arguments): array {
-                        $assigneeId = $data['assignee_id'];
-                        $assigneeType = null;
-                        $parsedAssigneeId = null;
+                // ->mutateFormDataUsing(function (array $data, array $arguments): array {
+                //     $assigneeId = $data['assignee_id'];
+                //     $assigneeType = null;
+                //     $parsedAssigneeId = null;
 
-                        if (str_starts_with($assigneeId, 'Employee_')) {
-                            $parsedAssigneeId = str_replace('Employee_', '', $assigneeId);
-                            $assigneeType = Employee::class;
-                        } elseif (str_starts_with($assigneeId, 'User_')) {
-                            $parsedAssigneeId = str_replace('User_', '', $assigneeId);
-                            $assigneeType = User::class;
-                        }
+                //     // if (str_starts_with($assigneeId, 'Employee_')) {
+                //     //     $parsedAssigneeId = str_replace('Employee_', '', $assigneeId);
+                //     //     $assigneeType = Employee::class;
+                //     // } elseif (str_starts_with($assigneeId, 'User_')) {
+                //     //     $parsedAssigneeId = str_replace('User_', '', $assigneeId);
+                //     //     $assigneeType = Employee::class;
+                //     // }
 
-                        $data['assignee_id'] = $parsedAssigneeId;
-                        $data['assignee_type'] = $assigneeType;
-                        return $data;
-                    })
+                //     $data['assignee_id'] = $parsedAssigneeId;
+                //     // $data['assignee_type'] = $assigneeType;
+                //     return $data;
+                // })
                 ,
                 DeleteAction::make()->model(Task::class),
             ])->cardAction('view')
@@ -174,24 +167,17 @@ class TaskBoard extends BoardPage
                                 Select::make('assignee_id')
                                     ->label('Assignee')
                                     ->options(
-                                        collect()
-                                            ->merge(
-                                                Employee::all()->mapWithKeys(
-                                                    fn($employee) => [
-                                                        "Employee_" . $employee->id =>
-                                                            $employee->email
-                                                    ],
-                                                ),
-                                            )
-                                            ->merge(
-                                                User::all()->mapWithKeys(
-                                                    fn($user) => [
-                                                        "User_" . $user->id =>
-                                                            $user->email
-                                                    ],
-                                                ),
-                                            ),
+
+                                        Employee::all()->mapWithKeys(
+                                            fn($employee) => [
+                                                $employee->id =>
+                                                    $employee->email
+                                            ],
+                                        ),
                                     )
+
+
+                                    ->searchable()
                                 ,
                                 DatePicker::make('due_date')
                                     ->label('Due Date'),
@@ -204,15 +190,15 @@ class TaskBoard extends BoardPage
                         $assigneeId = $data['assignee_id'];
                         $assigneeType = null;
 
-                        if (str_starts_with($assigneeId, 'Employee_')) {
-                            $assigneeId = str_replace('Employee_', '', $assigneeId);
-                            $assigneeType = Employee::class;
-                        } elseif (str_starts_with($assigneeId, 'User_')) {
-                            $assigneeId = str_replace('User_', '', $assigneeId);
-                            $assigneeType = User::class;
-                        }
+                        // if (str_starts_with($assigneeId, 'Employee_')) {
+                        //     $assigneeId = str_replace('Employee_', '', $assigneeId);
+                        //     $assigneeType = Employee::class;
+                        // } elseif (str_starts_with($assigneeId, 'User_')) {
+                        //     $assigneeId = str_replace('User_', '', $assigneeId);
+                        //     $assigneeType = Employee::class;
+                        // }
                         $data['assignee_id'] = $assigneeId;
-                        $data['assignee_type'] = $assigneeType;
+
                         $data['status'] = $arguments['column'] ?? $data['status'] ?? null;
                         $data['position'] = $this->getBoardPositionInColumn($arguments['column']);
                         return $data;

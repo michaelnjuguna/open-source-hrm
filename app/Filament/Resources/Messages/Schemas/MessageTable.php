@@ -1,5 +1,5 @@
 <?php
-namespace App\Filament\Resources\Message\Schemas;
+namespace App\Filament\Resources\Messages\Schemas;
 
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;

@@ -16,17 +16,14 @@ class MessageObserver
     {
         //
         $topic = $message->topic;
-        $recipient = null;
-        if ($message->sender->is($topic->creator)) {
-            $recipient = $topic->receiver;
-        } elseif ($message->sender->is($topic->receiver)) {
-            $recipient = $topic->creator;
-        }
+        $recipient = Employee::find($topic->receiver_id);
+        $sender = Employee::find($message->sender_id);
+
         $url = MessageResource::getUrl('view', ['record' => $topic]);
 
-        if ($recipient instanceof User && $message->sender instanceof Employee) {
+        if ($recipient->hasRole('admin') && $sender->hasRole('employee')) {
             $url = str_replace('/portal', '', $url);
-        } elseif ($recipient instanceof Employee && $message->sender instanceof User) {
+        } elseif ($recipient->hasRole('employee') && $sender->hasRole('admin')) {
             $parsed = parse_url(MessageResource::getUrl('view', ['record' => $topic]));
             $url = url('/portal' . $parsed['path']);
         }

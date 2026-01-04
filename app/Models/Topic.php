@@ -10,30 +10,23 @@ class Topic extends Model
     protected $table = "topics";
     protected $fillable = [
         "subject",
-        "creator_id",
-        "creator_type",
-        "receiver_id",
-        "receiver_type"
+        'creator_id',
+        'receiver_id',
+    ];
+    protected $casts = [
+        'subject' => 'string',
+        'creator_id' => 'integer',
+        'receiver_id' => 'integer',
     ];
 
-    public function creator()
-    {
-        return $this->morphTo();
-    }
-
-    public function receiver()
-    {
-        return $this->morphTo();
-    }
 
     public function message()
     {
         return $this->hasMany(Message::class);
     }
 
-
-    // public function creator()
-    // {
-    //     return $this->morphTo(Employee::class, ownerKey: 'User');
-    // }
+    public function creator()
+    {
+        return $this->belongsTo(Employee::class, 'creator_id');
+    }
 }

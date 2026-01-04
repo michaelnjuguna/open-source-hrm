@@ -1,5 +1,5 @@
 <?php
-namespace App\Filament\Resources\Admin\Schemas;
+namespace App\Filament\Resources\Admins\Schemas;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\{ActionGroup, EditAction, ViewAction, DeleteAction, BulkActionGroup, DeleteBulkAction};

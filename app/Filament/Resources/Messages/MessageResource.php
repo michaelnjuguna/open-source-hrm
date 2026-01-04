@@ -60,29 +60,23 @@ class MessageResource extends Resource
                 $query
                     ->where(function ($q) use ($user, $receiverType) {
                     $q->where("topics.receiver_id", $user->id)
-                        ->where("topics.receiver_type", $receiverType)
+
                         ->whereNot(function ($q2) use ($user) {
                             $q2->where(
                                 "messages.sender_id",
                                 $user->id,
-                            )->where(
-                                    "messages.sender_type",
-                                    get_class($user),
-                                );
+                            );
                         });
                 })
                     // Case 2: User is the sender of the topic
                     ->orWhere(function ($q) use ($user, $receiverType) {
                     $q->where("topics.creator_id", $user->id)
-                        ->where("topics.creator_type", $receiverType)
+
                         ->whereNot(function ($q2) use ($user) {
                             $q2->where(
                                 "messages.sender_id",
                                 $user->id,
-                            )->where(
-                                    "messages.sender_type",
-                                    get_class($user),
-                                );
+                            );
                         });
                 });
             })

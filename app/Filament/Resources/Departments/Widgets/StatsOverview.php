@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Departments\Widgets;
 
+use App\Models\Employee;
 use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -33,7 +34,7 @@ class StatsOverview extends BaseWidget
                 ])
             // ->url(route('filament.admin.resources.departments.index')),
             ,
-            Stat::make('HR Admins', User::Count())
+            Stat::make('HR Admins', Employee::role('admin')->count())
                 ->label('Total HR Admins')
                 ->color('success')
                 ->description('Total number of HR admins in the organization')

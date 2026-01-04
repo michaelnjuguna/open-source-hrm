@@ -22,11 +22,7 @@ return new class extends Migration {
             $table->json('deductions')->nullable(); // e.g., taxes, insurance
             $table->json('allowances')->nullable(); // e.g., transport, housing
             $table->json('bonuses')->nullable(); // e.g., performance bonuses, holiday
-            // $table->decimal('allowances', 10, 2)->default(0.00);
-            // $table->decimal('bonuses', 10, 2)->default(0.00);
-            // $table->text('deductions_details')->nullable();
-            // $table->text('allowances_details')->nullable();
-            // $table->text('bonuses_details')->nullable();
+
             $table->text('notes')->nullable();
             $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending'); // e.g., pending, completed
             $table->timestamps();

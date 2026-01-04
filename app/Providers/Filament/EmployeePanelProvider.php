@@ -41,11 +41,12 @@ class EmployeePanelProvider extends PanelProvider
             ->login()
             ->passwordReset()
             ->profile()
+
             ->brandName(
                 'Portal',
             )
 
-            ->authGuard('employee')
+
             ->discoverResources(in: app_path('Filament/Employee/Resources'), for: 'App\\Filament\\Employee\\Resources')
             ->discoverPages(in: app_path('Filament/Employee/Pages'), for: 'App\\Filament\\Employee\\Pages')
             ->pages([

@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->enum('status', ['todo', 'in_progress', 'completed'])->default('todo');
             $table->integer('sort_order')->nullable();
-            $table->foreignId('employee_id')->nullable()->constrained('employees')->onDelete('set null');
+            $table->foreignId('assignee_id')->nullable()->constrained('employees')->onDelete('set null');
 
             $table->date('due_date')->nullable();
             $table->timestamps();
