@@ -28,15 +28,18 @@
 - Datetime
 - Integrate spatie activity log
 - Add indexing to topics and messaging
-- Github tests and CI
 
 ## In Progress
 
 - Fix merging users tables
 - Tests
+  - Portal auth
+- Github tests and CI
 
 ## Done
 
 - Fix auth
+- Tests
+  - Admin auth
 
 - Migrate users to one table
