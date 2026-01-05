@@ -19,6 +19,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: secret
           MYSQL_DATABASE: test
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
         ports:
           - 3306:3306
         options: >-
@@ -35,6 +36,7 @@ jobs:
       DB_DATABASE: test
       DB_USERNAME: root
       DB_PASSWORD: secret
+      CACHE_STORE: array
       APP_ENV: testing
       CACHE_DRIVER: array
       SESSION_DRIVER: array
@@ -63,31 +65,55 @@ jobs:
         run: composer install --no-progress --prefer-dist --optimize-autoloader
       - name: Prepare environment
         run: |
-          cp .env.testing .env
           rm -rf bootstrap/cache/*.php
-          php artisan config:clear
-          php artisan cache:clear
-          php artisan key:generate
+          cp .env.testing .env
+          php artisan config:clear --env=testing
+          php artisan cache:clear array --env=testing
       - name: Verify database configuration
         run: |
           echo "DB_HOST: $(php -r "echo env('DB_HOST');")"
           echo "DB_USERNAME: $(php -r "echo env('DB_USERNAME');")"
           echo "DB_DATABASE: $(php -r "echo env('DB_DATABASE');")"
-          php artisan config:show database
-
-      - name: Generate app key
-        run: php artisan key:generate
+          php artisan config:show database --env=testing
 
       - name: Wait for MySQL
         run: |
           for i in {1..30}; do
-            nc -zv 127.0.0.1 3306 && break
+            php -r "new PDO('mysql:host=127.0.0.1;port=3306', 'root', 'secret');" && break
             echo "Waiting for MySQL..."
             sleep 3
           done
 
       - name: Run migrations
         run: php artisan migrate --env=testing --force
+        env:
+          DB_PASSWORD: secret
+
+      - name: Cache vendor build artifacts between runs
+        uses: actions/cache@v3
+        with:
+          path: public/build
+          key: ${{ runner.os }}-vite-build-${{ hashFiles('vite.config.js', 'resources/**') }}
+          restore-keys: ${{ runner.os }}-vite-build-
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build front-end assets
+        run: npm run build
 
       - name: Run tests
-        run: php artisan test --env=testing --verbose
+        run: php artisan test --env=testing
+        env:
+          DB_PASSWORD: secret
+          APP_ENV: testing
+
+      - name: Dump Laravel logs
+        if: always()
+        run: |
+          if [ -f storage/logs/laravel.log ]; then
+            echo "---- storage/logs/laravel.log ----"
+            cat storage/logs/laravel.log
+          else
+            echo "No Laravel log generated."
+          fi
