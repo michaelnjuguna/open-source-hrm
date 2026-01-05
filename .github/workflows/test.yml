@@ -19,8 +19,6 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: secret
           MYSQL_DATABASE: test
-          MYSQL_USER: root
-          MYSQL_PASSWORD: secret
         ports:
           - 3306:3306
         options: >-
@@ -49,7 +47,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.2"
+          php-version: "8.3"
           extensions: mbstring, bcmath, mysql, pdo_mysql
           ini-values: post_max_size=256M, max_execution_time=180
           coverage: xdebug
@@ -58,14 +56,24 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+          key: ${{ runner.os }}-php-8.3-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: ${{ runner.os }}-php-8.3-composer-
 
       - name: Install Composer dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
-
-      - name: Copy .env
-        run: cp .env.testing .env
+      - name: Prepare environment
+        run: |
+          cp .env.testing .env
+          rm -rf bootstrap/cache/*.php
+          php artisan config:clear
+          php artisan cache:clear
+          php artisan key:generate
+      - name: Verify database configuration
+        run: |
+          echo "DB_HOST: $(php -r "echo env('DB_HOST');")"
+          echo "DB_USERNAME: $(php -r "echo env('DB_USERNAME');")"
+          echo "DB_DATABASE: $(php -r "echo env('DB_DATABASE');")"
+          php artisan config:show database
 
       - name: Generate app key
         run: php artisan key:generate
