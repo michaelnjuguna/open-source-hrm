@@ -5,16 +5,12 @@ use Auth;
 use Database\Seeders\DatabaseSeeder;
 use Filament\Auth\Pages\PasswordReset\RequestPasswordReset;
 use Filament\Auth\Pages\PasswordReset\ResetPassword;
-use Filament\Notifications\Notification;
-use Filament\Notifications\Testing\TestsNotifications;
-
 use Illuminate\Auth\Passwords\PasswordBroker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 use Faker\Factory as Faker;
 use Livewire\Livewire;
-use Illuminate\Support\Facades\DB;
 use App\Models\Employee;
 use App\Filament\Pages\Auth\Register;
 use Filament\Auth\Pages\Login;
@@ -118,11 +114,8 @@ class AdminAuthTest extends TestCase
                 'email' => $employee->email,
 
             ])
-
             ->call('request')
             ->assertHasNoFormErrors();
-
-
     }
 
     public function test_user_can_reset_password()
