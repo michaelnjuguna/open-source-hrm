@@ -1,30 +1,22 @@
 <?php
-
 namespace Tests\Feature;
 use Auth;
 use Database\Seeders\DatabaseSeeder;
-use Filament\Auth\Pages\PasswordReset\RequestPasswordReset;
-use Filament\Auth\Pages\PasswordReset\ResetPassword;
-use Illuminate\Auth\Passwords\PasswordBroker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
-use Tests\TestCase;
 use Faker\Factory as Faker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use App\Models\Employee;
-use App\Filament\Pages\Auth\Register;
+use Tests\TestCase;
+use Illuminate\Support\Facades\Hash;
 use Filament\Auth\Pages\Login;
+use Filament\Auth\Pages\PasswordReset\{RequestPasswordReset, ResetPassword};
+use Illuminate\Auth\Passwords\PasswordBroker;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Event;
-
-
-
-class AdminAuthTest extends TestCase
+class PortalAuthTest extends TestCase
 {
     use RefreshDatabase;
-    /**
-     * Check the login page loads successfully.
-     */
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -40,74 +32,26 @@ class AdminAuthTest extends TestCase
             'email' => $faker->unique()->safeEmail(),
             'password' => Hash::make($password),
         ]);
-        $employee->assignRole('admin');
+        $employee->assignRole('employee');
         return $employee;
     }
     public function test_login_page_can_be_accessed()
     {
-        $response = $this->get('/login');
-
-        $response->assertStatus(200);
-    }
-    public function test_register_page_can_be_accessed()
-    {
-        $response = $this->get('/register');
+        $response = $this->get('/portal/login');
 
         $response->assertStatus(200);
     }
     public function test_reset_password_page_can_be_accessed()
     {
-        $response = $this->get('/password-reset/request');
+        $response = $this->get('/portal/password-reset/request');
 
         $response->assertStatus(200);
     }
-    public function test_user_can_register()
+    public function test_user_cannot_access_register_page()
     {
+        $response = $this->get('/portal/register');
 
-        $faker = Faker::create();
-        $email = $faker->unique()->safeEmail();
-        Livewire::test(Register::class)
-            ->fillForm([
-                'first_name' => $faker->firstName(),
-                'last_name' => $faker->lastName(),
-                'employee_code' => 'EMP_123',
-                'phone' => $faker->phoneNumber(),
-                'email' => $email,
-                'password' => 'password123',
-                'passwordConfirmation' => 'password123',
-            ])
-            ->call('register')
-            ->assertHasNoFormErrors()
-            ->assertRedirect(filament()->getHomeUrl());
-        // ->assertRedirect('/');
-
-        $this->assertDatabaseHas('employees', [
-            'email' => $email,
-        ]);
-    }
-    public function test_user_cannot_register_with_wrong_details()
-    {
-
-        $faker = Faker::create();
-        $email = $faker->unique()->safeEmail();
-        Livewire::test(Register::class)
-            ->fillForm([
-                'first_name' => $faker->firstName(),
-                'last_name' => $faker->lastName(),
-                'employee_code' => 'EMP_123',
-                'phone' => $faker->phoneNumber(),
-                'email' => $email,
-                'password' => 'password123',
-                'passwordConfirmation' => 'password',
-            ])
-            ->call('register')
-            ->assertHasFormErrors()
-            ->assertNoRedirect();
-        // ->assertRedirect('/');
-
-        $this->assertDatabaseMissing('employees', [
-            'email' => $email,
-        ]);
+        $response->assertStatus(404);
     }
     public function test_user_can_login()
     {
@@ -156,7 +100,6 @@ class AdminAuthTest extends TestCase
             ->assertNoRedirect()
         ;
     }
-
     public function test_user_can_request_password_reset()
     {
 
@@ -169,7 +112,6 @@ class AdminAuthTest extends TestCase
             ->call('request')
             ->assertHasNoFormErrors();
     }
-
     public function test_user_can_reset_password()
     {
 
@@ -198,6 +140,4 @@ class AdminAuthTest extends TestCase
 
 
     }
-
-
 }
