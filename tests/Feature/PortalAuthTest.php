@@ -30,7 +30,7 @@ class PortalAuthTest extends TestCase
             'first_name' => $faker->firstName(),
             'last_name' => $faker->lastName(),
             'email' => $faker->unique()->safeEmail(),
-            'password' => Hash::make($password),
+            'password' => $password,
         ]);
         $employee->assignRole('employee');
         return $employee;
