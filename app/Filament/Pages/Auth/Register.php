@@ -46,7 +46,6 @@ class Register extends BaseRegister
     {
         $admin = $this->createUser($data);
         $admin->assignRole('admin');
-        $this->redirect('/');
         return $admin;
     }
     protected function createUser(array $data): Employee
@@ -55,7 +54,7 @@ class Register extends BaseRegister
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => $data['password'],
             'employee_code' => $data['employee_code'] ?? null,
             'phone' => $data['phone'] ?? null,
         ]);

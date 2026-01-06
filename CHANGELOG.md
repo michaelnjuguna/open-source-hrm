@@ -4,6 +4,7 @@
 
 ### Added
 
+- Admin authentication tests
 - CHANGELOG.md
 - GitHub workflows for testing
 
