@@ -85,6 +85,30 @@ class AdminAuthTest extends TestCase
             'email' => $email,
         ]);
     }
+    public function test_user_cannot_register_with_wrong_details()
+    {
+
+        $faker = Faker::create();
+        $email = $faker->unique()->safeEmail();
+        Livewire::test(Register::class)
+            ->fillForm([
+                'first_name' => $faker->firstName(),
+                'last_name' => $faker->lastName(),
+                'employee_code' => 'EMP_123',
+                'phone' => $faker->phoneNumber(),
+                'email' => $email,
+                'password' => 'password123',
+                'passwordConfirmation' => 'password',
+            ])
+            ->call('register')
+            ->assertHasFormErrors()
+            ->assertNoRedirect();
+        // ->assertRedirect('/');
+
+        $this->assertDatabaseMissing('employees', [
+            'email' => $email,
+        ]);
+    }
     public function test_user_can_login()
     {
 
@@ -103,6 +127,43 @@ class AdminAuthTest extends TestCase
 
 
         $this->assertEquals(Auth::id(), $employee->id);
+    }
+    public function test_unregistered_user_cannot_login()
+    {
+
+        $faker = Faker::create();
+
+        Livewire::test(name: Login::class)
+            ->fillForm([
+                'email' => $faker->safeEmail(),
+                'password' => 'password123',
+            ])
+            ->call('authenticate')
+            ->assertHasFormErrors()
+            ->assertNoRedirect()
+
+
+        ;
+
+
+
+    }
+    public function test_user_cannot_login_with_wrong_details()
+    {
+
+        $password = 'incorrectPassword';
+        $employee = $this->createEmployee();
+
+        $employee->assignRole('admin');
+        Livewire::test(name: Login::class)
+            ->fillForm([
+                'email' => $employee->email,
+                'password' => $password,
+            ])
+            ->call('authenticate')
+            ->assertHasFormErrors()
+            ->assertNoRedirect()
+        ;
     }
 
     public function test_user_can_request_password_reset()

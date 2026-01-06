@@ -28,6 +28,7 @@
 - Datetime
 - Integrate spatie activity log
 - Add indexing to topics and messaging
+- Do releases
 
 ## In Progress
 
@@ -43,3 +44,13 @@
   - Admin auth
 
 - Migrate users to one table
+
+## Releases
+
+### v1.1.0
+
+- Fix merging users tables
+
+### v1.1.1
+
+- Tests for v1.1.0
