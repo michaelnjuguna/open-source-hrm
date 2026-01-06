@@ -28,7 +28,7 @@ use Filament\Tables\Table;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\Message\Schemas\MessageTable;
+use App\Filament\Resources\Messages\Schemas\MessageTable;
 
 class MessageResource extends Resource
 {

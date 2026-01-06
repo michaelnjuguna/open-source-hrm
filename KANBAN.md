@@ -2,47 +2,46 @@
 
 ## Todo
 
-- Cast all fillables
 - Update to filament 5.1
 - Database notifications for all resources
 - Build API
   - Employee portal, REST
   - Admin portal, GraphQL
-- No testing filament code
 - Testing
   - Resources
-  - Auth
+  - API
 - Add strict typing
-- Use Redis Queue
+- Project notes and they can have different types of notes, i.e. project description, tech specs using repeater
+- Datetime
+- Integrate spatie activity log
+- Do releases
+
+## In Progress
+
+- Add Laravel Debugbar
+- Fix merging users tables
+- Tests
+  - Resources
+- Cast all fillables
 - Add translations
 - Use Roboto font
+- Github tests and CI
+- Use Redis Queue
+- Add indexing to topics and messaging
+- Inactive employees can't access portal
 - Make view message mobile responsive
-- Project notes and they can have different types of notes, i.e. project description, tech specs using repeater
 - Database notifications
   - Departments
   - Leave requests
   - Event nearing
   - Close sidebar on click
-- Inactive employees can't access portal
-- Add Laravel Debugbar
-- Datetime
-- Integrate spatie activity log
-- Add indexing to topics and messaging
-- Do releases
-
-## In Progress
-
-- Fix merging users tables
-- Tests
-  - Portal auth
-- Github tests and CI
 
 ## Done
 
 - Fix auth
 - Tests
   - Admin auth
-
+  - Portal auth
 - Migrate users to one table
 
 ## Releases
@@ -53,4 +52,8 @@
 
 ### v1.1.1
 
-- Tests for v1.1.0
+- Portal API
+
+### v1.1.2
+
+- Admin API
