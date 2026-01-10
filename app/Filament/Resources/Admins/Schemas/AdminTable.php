@@ -12,8 +12,16 @@ class AdminTable
             ->columns([
                 TextColumn::make('name')
                     ->label('Name')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable([
+                        'first_name',
+                        'last_name',
+                    ])
+                    ->sortable(
+                        [
+                            'first_name',
+                            'last_name',
+                        ]
+                    ),
                 TextColumn::make('email')
                     ->label('Email')
                     ->searchable()
