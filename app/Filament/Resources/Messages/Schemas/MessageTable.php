@@ -24,8 +24,14 @@ class MessageTable
             ->columns([
                 //
                 TextColumn::make("creator.name")
-                    ->sortable()
-                    ->searchable()
+                    ->sortable([
+                        'first_name',
+                        'last_name',
+                    ])
+                    ->searchable([
+                        'first_name',
+                        'last_name',
+                    ])
                     ->label("Sender")
                     ->weight(function ($record) {
                         return $record
