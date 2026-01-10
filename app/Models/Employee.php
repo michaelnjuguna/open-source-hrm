@@ -50,6 +50,10 @@ class Employee extends Authenticatable
     {
         return $this->belongsTo(Department::class, 'department_id');
     }
+    public function position()
+    {
+        return $this->belongsTo(Position::class, 'position_id');
+    }
     /**
      * Get the attributes that should be cast.
      *

@@ -13,4 +13,13 @@ class CreateEmployee extends CreateRecord
     {
         return $this->previousUrl ?? $this->getResource()::getUrl('index');
     }
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['password'] = $data['email'];
+        return $data;
+    }
+    protected function afterCreate(): void
+    {
+        $this->record->assignRole('employee');
+    }
 }

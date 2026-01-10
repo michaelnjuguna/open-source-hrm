@@ -32,7 +32,12 @@ class Register extends BaseRegister
                     ]),
                 Grid::make()
                     ->schema([
-                        TextInput::make('employee_code'),
+                        TextInput::make('employee_code')
+
+                            ->label('Employee code')
+                            ->maxLength(50)
+
+                        ,
                         TextInput::make('phone'),
                     ]),
 

@@ -11,6 +11,7 @@ use App\Filament\Resources\Employees\Pages\EditEmployee;
 use App\Models\Employee;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 class EmployeeResource extends Resource
 {
     protected static ?string $model = Employee::class;
@@ -26,7 +27,13 @@ class EmployeeResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return EmployeeTable::configure($table);
+        return EmployeeTable::configure($table)
+            ->modifyQueryUsing(
+                function (Builder $query) {
+                    $query->role('employee')->withoutRole('admin');
+                }
+            )
+        ;
     }
 
     public static function getRelations(): array

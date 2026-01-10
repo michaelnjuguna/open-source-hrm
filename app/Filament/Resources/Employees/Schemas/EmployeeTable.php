@@ -59,12 +59,12 @@ class EmployeeTable
             )
             ->columns([
                 //
-                TextColumn::make('employee_number')
-                    ->label('Employee No.')
+                TextColumn::make('employee_code')
+                    ->label('Employee code')
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('full_name')
+                TextColumn::make('name')
                     ->label('Name')
                     ->searchable(
                         [

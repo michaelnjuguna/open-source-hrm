@@ -9,8 +9,13 @@ class AdminForm
         return $schema
             ->components([
                 //
-                TextInput::make('name')
-                    ->label('Name')
+                TextInput::make('first_name')
+                    ->label('Last Name')
+                    ->required()
+                    ->maxLength(255)
+                ,
+                TextInput::make('last_name')
+                    ->label('Last Name')
                     ->required()
                     ->maxLength(255)
                 ,

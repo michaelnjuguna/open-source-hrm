@@ -19,10 +19,10 @@ class EmployeeForm
 
 
                         Grid::make(2)->schema([
-                            TextInput::make('employee_number')
+                            TextInput::make('employee_code')
                                 ->required()
                                 ->maxLength(50)
-                                ->label('Employee Number')
+                                ->label('Employee code')
                                 ->placeholder('Enter employee number')
                                 ->columnSpan(1)
                             ,
@@ -169,6 +169,8 @@ class EmployeeForm
                             ])
                     ])
                     ->columnSpanFull(),
-            ]);
+            ])
+
+        ;
     }
 }
