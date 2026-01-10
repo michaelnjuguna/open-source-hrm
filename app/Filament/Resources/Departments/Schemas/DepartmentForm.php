@@ -28,14 +28,13 @@ class DepartmentForm
                     ->placeholder('Enter department description'),
                 Select::make('manager_id')
                     ->options(function () {
-                        return Employee::all()->pluck('full_name', 'id');
+                        return Employee::all()->pluck('name', 'id');
                     })
                     ->label('Manager')
-                    ->searchable(
 
-                    )
                     ->placeholder('Select a manager')
                     ->preload()
+                    ->searchable()
                     ->nullable(),
 
             ]);

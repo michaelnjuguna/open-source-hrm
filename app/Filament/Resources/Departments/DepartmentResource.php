@@ -4,14 +4,6 @@ namespace App\Filament\Resources\Departments;
 
 use App\Filament\Resources\Departments\Schemas\DepartmentTable;
 use Filament\Schemas\Schema;
-
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\ActionGroup;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\Departments\Pages\ListDepartments;
 use App\Models\Department;
 use Filament\Forms;
@@ -52,4 +44,5 @@ class DepartmentResource extends Resource
             // 'edit' => Pages\EditDepartment::route('/{record}/edit'),
         ];
     }
+
 }
