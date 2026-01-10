@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Departments;
 
-use App\Filament\Resources\Department\Schemas\DepartmentTable;
+use App\Filament\Resources\Departments\Schemas\DepartmentTable;
 use Filament\Schemas\Schema;
 
 use Filament\Tables\Columns\TextColumn;

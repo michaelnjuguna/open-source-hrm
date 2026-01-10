@@ -44,9 +44,11 @@ class Employee extends Authenticatable
     {
         return "{$this->first_name} {$this->last_name}";
     }
-    public function tasks()
+
+
+    public function department()
     {
-        return $this->morphMany(Task::class, 'assignee');
+        return $this->belongsTo(Department::class, 'department_id');
     }
     /**
      * Get the attributes that should be cast.

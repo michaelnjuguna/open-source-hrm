@@ -15,13 +15,24 @@
 - Datetime
 - Integrate spatie activity log
 - Do releases
+- Fix
+  - Taskboard
+  - Inbox
+  - Departments
+  - Admins
+  - Employees
+  - Attendances
+  - Leave requests
+  - Payrolls
 
 ## In Progress
 
 - Add Laravel Debugbar
 - Fix merging users tables
+- Fix
+  - Dashboard
 - Tests
-  - Resources
+  - Dashboard
 - Cast all fillables
 - Add translations
 - Use Roboto font
