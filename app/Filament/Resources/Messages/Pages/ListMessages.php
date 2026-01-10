@@ -26,13 +26,13 @@ class ListMessages extends ListRecords
                 ->modifyQueryUsing(
                     fn(Builder $query) => $query
                         ->where('creator_id', $user->id)
-                        ->where('creator_type', $type)
+
                 ),
             'Received' => Tab::make()
                 ->modifyQueryUsing(
                     fn(Builder $query) => $query
                         ->where('receiver_id', $user->id)
-                        ->where('receiver_type', $type)
+
                 )
         ];
     }

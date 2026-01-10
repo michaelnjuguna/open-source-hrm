@@ -4,30 +4,13 @@ namespace App\Filament\Resources\Messages;
 
 use App\Filament\Resources\Messages\Schemas\MessageForm;
 use Filament\Schemas\Schema;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\Messages\Pages\ListMessages;
 use App\Filament\Resources\Messages\Pages\CreateMessage;
 use App\Filament\Resources\Messages\Pages\ViewMessage;
-// use App\Filament\Resources\MessageResource\Pages;
-// use App\Filament\Resources\MessageResource\RelationManagers;
-use Filament\Forms\Components\RichEditor;
-use Filament\Support\Enums\FontWeight;
 use App\Models\{Message, Topic, User, Employee};
-use Filament\Tables\Actions\{ViewAction, EditAction, ActionGroup, DeleteAction};
-use Filament\Tables\Grouping\Group;
 use Illuminate\Support\Facades\Auth;
-use Filament\Forms;
-
-use Filament\Tables\Filters\Filter;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Forms\Components\{TextInput, Textarea, Select, DateTimePicker};
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\Messages\Schemas\MessageTable;
 
 class MessageResource extends Resource
@@ -54,31 +37,30 @@ class MessageResource extends Resource
         $receiverType = get_class($user);
 
         $unreadCount = Message::where("read_at", null)
-            ->join("topics", "messages.topic_id", "=", "topics.id")
+            ->join("topics as topic", "messages.topic_id", "=", "topic.id")
             ->where(function ($query) use ($user, $receiverType) {
-                // Case 1: User is the receiver of the topic
                 $query
                     ->where(function ($q) use ($user, $receiverType) {
-                    $q->where("topics.receiver_id", $user->id)
+                        $q->where("topic.receiver_id", $user->id)
 
-                        ->whereNot(function ($q2) use ($user) {
-                            $q2->where(
-                                "messages.sender_id",
-                                $user->id,
-                            );
-                        });
-                })
+                            ->whereNot(function ($q2) use ($user) {
+                                $q2->where(
+                                    "messages.sender_id",
+                                    $user->id,
+                                );
+                            });
+                    })
                     // Case 2: User is the sender of the topic
                     ->orWhere(function ($q) use ($user, $receiverType) {
-                    $q->where("topics.creator_id", $user->id)
+                        $q->where("topic.creator_id", $user->id)
 
-                        ->whereNot(function ($q2) use ($user) {
-                            $q2->where(
-                                "messages.sender_id",
-                                $user->id,
-                            );
-                        });
-                });
+                            ->whereNot(function ($q2) use ($user) {
+                                $q2->where(
+                                    "messages.sender_id",
+                                    $user->id,
+                                );
+                            });
+                    });
             })
             ->count();
 
