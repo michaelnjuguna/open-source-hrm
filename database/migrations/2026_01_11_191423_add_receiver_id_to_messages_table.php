@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::table('messages', function (Blueprint $table) {
             //
-
+            $table->foreignId('receiver_id');
             $table->index(['receiver_id', 'read_at']);
         });
     }
@@ -24,7 +24,8 @@ return new class extends Migration {
     {
         Schema::table('messages', function (Blueprint $table) {
             //
-
+            $table->dropForeign(['receiver_id']);
+            $table->dropColumn('receiver_id');
             $table->dropIndex(['receiver_id', 'read_at']);
         });
     }

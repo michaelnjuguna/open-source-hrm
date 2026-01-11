@@ -18,5 +18,9 @@ class CreateEmployee extends CreateRecord
         $data['password'] = $data['email'];
         return $data;
     }
+    protected function afterCreate(): void
+    {
+        $this->record->assignRole('employee');
+    }
 
 }
