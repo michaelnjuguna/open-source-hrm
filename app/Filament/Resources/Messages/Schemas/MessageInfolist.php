@@ -19,7 +19,11 @@ class MessageInfolist
                     ->poll('3s')
                     ->label('')
                     ->schema([
-                        \Filament\Schemas\Components\Grid::make(5)
+                        \Filament\Schemas\Components\Grid::make([
+                            'default' => 1,
+                            'md' => 5,
+                            'lg' => 5,
+                        ])
 
                             ->schema([
                                 TextEntry::make('sender.name')
@@ -28,7 +32,11 @@ class MessageInfolist
                                     ->weight(FontWeight::Bold)
 
                                     ->icon('heroicon-s-user-circle')
-                                    ->columnSpan(2)
+                                    ->columnSpan([
+                                        'default' => 1,
+                                        'md' => 2,
+                                        'lg' => 2,
+                                    ])
                                 ,
                                 TextEntry::make('created_at')
                                     ->label('')
@@ -58,9 +66,14 @@ class MessageInfolist
                                         ->modalButton('Yes, Delete')
                                         ->modalIconColor('danger')
                                         ->modalIcon('heroicon-o-trash')
-                                        ->iconButton()
+                                        ->iconButton(),
 
-                                ])->alignEnd()->columnSpan(1)
+
+
+
+                                ])
+                                    ->alignEnd()
+                                    ->columnSpan(1)
 
 
                             ]),
