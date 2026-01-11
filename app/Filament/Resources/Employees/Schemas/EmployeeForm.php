@@ -19,10 +19,10 @@ class EmployeeForm
 
 
                         Grid::make(2)->schema([
-                            TextInput::make('employee_number')
+                            TextInput::make('employee_code')
                                 ->required()
                                 ->maxLength(50)
-                                ->label('Employee Number')
+                                ->label('Employee code')
                                 ->placeholder('Enter employee number')
                                 ->columnSpan(1)
                             ,
@@ -49,9 +49,12 @@ class EmployeeForm
                     ->schema([
                         Grid::make(2)
                             ->schema([
-                                TextInput::make('email')->email()->required()->label('Email Address (this will be the default password for the employee)')
+                                TextInput::make('email')
+                                    ->email()
+                                    ->required()
+                                    ->label('Email Address (this will be the default password for the user )')
                                     ->unique(ignoreRecord: true)
-
+                                    ->copyable()
                                 ,
                                 TextInput::make('phone')->tel()->required()->label('Phone Number')->unique(ignoreRecord: true),
                                 TextInput::make('national_id')->required()->unique(ignoreRecord: true)
@@ -169,6 +172,9 @@ class EmployeeForm
                             ])
                     ])
                     ->columnSpanFull(),
-            ]);
+            ])
+
+
+        ;
     }
 }

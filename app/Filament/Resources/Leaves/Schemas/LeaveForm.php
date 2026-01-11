@@ -14,7 +14,7 @@ class LeaveForm
 
                 Select::make('employee_id')
                     ->options(function () {
-                        return Employee::all()->pluck('full_name', 'id');
+                        return Employee::all()->pluck('name', 'id');
                     })
                     ->searchable(
                         [

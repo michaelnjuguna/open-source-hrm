@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Attendances;
 use App\Filament\Resources\Attendances\Schemas\AttendanceForm;
 use Filament\Schemas\Schema;
 use App\Models\Employee;
-use Filament\Schemas\Components\Grid;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -16,19 +15,9 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\Attendances\Pages\ListAttendances;
-use App\Filament\Resources\AttendanceResource\Pages;
-use App\Filament\Resources\AttendanceResource\RelationManagers;
 use App\Models\Attendance;
 use App\Models\Shift;
-use Filament\Forms;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\TimePicker;
-use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -58,8 +47,8 @@ class AttendanceResource extends Resource
                     ->latest()
             )
             ->columns([
-                TextColumn::make('employee.employee_number')
-                    ->label('Employee No.')
+                TextColumn::make('employee.employee_code')
+                    ->label('Employee code')
                     ->searchable([
                         'first_name',
                         'last_name',
@@ -71,7 +60,7 @@ class AttendanceResource extends Resource
                             'last_name',
                         ]
                     ),
-                TextColumn::make('employee.full_name')
+                TextColumn::make('employee.name')
                     ->searchable([
                         'first_name',
                         'last_name',
@@ -126,7 +115,7 @@ class AttendanceResource extends Resource
                             ]
                         )
                         ->options(
-                            Employee::all()->pluck('full_name', 'id')
+                            Employee::all()->pluck('name', 'id')
                         ),
                     SelectFilter::make('shift_id')
                         ->label('Shift')

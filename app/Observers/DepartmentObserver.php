@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\Department;
 use Filament\Notifications\Notification;
 use Filament\Actions\Action;
+use App\Filament\Resources\Departments\DepartmentResource;
 class DepartmentObserver
 {
     /**
@@ -26,16 +27,13 @@ class DepartmentObserver
     }
     private function sendManagerNotification(Department $department): void
     {
+        if (!$department->manager) {
+            return;
+        }
         if ($department->manager) {
             Notification::make()
                 ->title('You have been assigned a department')
                 ->body($department->name)
-                ->actions([
-                    Action::make('view')
-                        ->url(Department::getUrl())
-                        ->markAsRead()
-                        ->label('View'),
-                ])
                 ->info()
                 ->sendToDatabase($department->manager);
         }
