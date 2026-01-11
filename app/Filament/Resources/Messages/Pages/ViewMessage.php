@@ -87,6 +87,7 @@ class ViewMessage extends ViewRecord
                         'topic_id' => $this->record->id,
                         'sender_id' => auth()->id(),
                         'content' => $data['content'],
+                        'receiver_id' => $this->record->receiver_id
                     ]);
                     $this->record->load('message');
                     $this->refresh();

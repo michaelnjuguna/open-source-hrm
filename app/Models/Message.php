@@ -12,13 +12,15 @@ class Message extends Model
         'topic_id',
         'sender_id',
         'content',
-        'read_at'
+        'read_at',
+        'receiver_id'
     ];
     protected $casts = [
         'topic_id' => 'integer',
         'sender_id' => 'integer',
         'content' => 'string',
         'read_at' => 'datetime',
+        'receiver_id' => 'integer'
     ];
     protected $with = ['sender'];
     public function sender()

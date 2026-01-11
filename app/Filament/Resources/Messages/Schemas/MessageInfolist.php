@@ -96,6 +96,7 @@ class MessageInfolist
                                 'topic_id' => $livewire->record->id,
                                 'sender_id' => auth()->id(),
                                 'content' => $data['content'],
+                                'receiver_id' => $livewire->record->receiver_id
                             ]);
 
 

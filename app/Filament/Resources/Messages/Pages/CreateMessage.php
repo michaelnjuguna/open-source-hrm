@@ -16,7 +16,7 @@ class CreateMessage extends CreateRecord
     {
 
         // $topic = null;
-        foreach ($data['receiver'] as $receiverId) {
+        foreach ($data['receiver_id'] as $receiverId) {
 
             $topic = Topic::create([
                 'subject' => $data['subject'],
@@ -29,6 +29,7 @@ class CreateMessage extends CreateRecord
                     'sender_id' => auth()->id(),
                     'content' => $data['content'],
                     'read_at' => null,
+                    'receiver_id' => $receiverId
                 ]
             );
         }

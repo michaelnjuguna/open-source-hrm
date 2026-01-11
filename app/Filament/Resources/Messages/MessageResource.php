@@ -27,45 +27,17 @@ class MessageResource extends Resource
     protected static string|\UnitEnum|null $navigationGroup = "Work space";
     // protected static ?string $navigationBadgeTooltip = "Unread messages";
 
-    public static function getNavigationBadge(): ?string
-    {
-        $user = Auth::user();
-        if (!$user) {
-            return null; // Return null if no user is authenticated
-        }
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     $user = Auth::user();
+    //     if (!$user) {
+    //         return null; // Return null if no user is authenticated
+    //     }
 
-        $receiverType = get_class($user);
-
-        $unreadCount = Message::where("read_at", null)
-            ->join("topics as topic", "messages.topic_id", "=", "topic.id")
-            ->where(function ($query) use ($user, $receiverType) {
-                $query
-                    ->where(function ($q) use ($user, $receiverType) {
-                        $q->where("topic.receiver_id", $user->id)
-
-                            ->whereNot(function ($q2) use ($user) {
-                                $q2->where(
-                                    "messages.sender_id",
-                                    $user->id,
-                                );
-                            });
-                    })
-                    // Case 2: User is the sender of the topic
-                    ->orWhere(function ($q) use ($user, $receiverType) {
-                        $q->where("topic.creator_id", $user->id)
-
-                            ->whereNot(function ($q2) use ($user) {
-                                $q2->where(
-                                    "messages.sender_id",
-                                    $user->id,
-                                );
-                            });
-                    });
-            })
-            ->count();
-
-        return $unreadCount > 0 ? (string) $unreadCount : null;
-    }
+    //     $unreadMessages = Message::where('receiver_id', $user->id)
+    //         ->whereNull('read_at')->count();
+    //     return $unreadMessages;
+    // }
 
     public static function form(Schema $schema): Schema
     {
