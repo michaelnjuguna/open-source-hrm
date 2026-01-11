@@ -34,4 +34,9 @@ class Message extends Model
         return $this->belongsTo(Topic::class);
     }
 
+    public function receiver()
+    {
+        return $this->belongsTo(Employee::class, 'receiver_id');
+    }
+
 }

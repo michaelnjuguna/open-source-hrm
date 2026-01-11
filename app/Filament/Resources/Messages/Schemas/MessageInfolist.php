@@ -92,11 +92,13 @@ class MessageInfolist
                         ])
 
                         ->action(function ($data, $livewire) {
+                            $userId = auth()->id();
+                            $receiverId = $userId === $livewire->record->receiver_id ? $livewire->record->creator_id : $livewire->record->receiver_id;
                             Message::create([
                                 'topic_id' => $livewire->record->id,
                                 'sender_id' => auth()->id(),
                                 'content' => $data['content'],
-                                'receiver_id' => $livewire->record->receiver_id
+                                'receiver_id' => $receiverId
                             ]);
 
 

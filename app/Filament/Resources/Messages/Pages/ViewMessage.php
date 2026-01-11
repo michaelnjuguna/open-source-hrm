@@ -79,15 +79,14 @@ class ViewMessage extends ViewRecord
                     // ->extraAttributes(['style' => 'height: 400px;'])
                 ])
                 ->action(function ($data) {
-                    // $data['topic_id'] = $this->record->topic_id;
-                    // $data['sender_type'] = $this->record->topic_id;
-        
-                    // $data['sender_id'] = auth()->id();
+
+                    $userId = auth()->id();
+                    $receiverId = $userId === $this->record->receiver_id ? $this->record->creator_id : $this->record->receiver_id;
                     Message::create([
                         'topic_id' => $this->record->id,
                         'sender_id' => auth()->id(),
                         'content' => $data['content'],
-                        'receiver_id' => $this->record->receiver_id
+                        'receiver_id' => $receiverId
                     ]);
                     $this->record->load('message');
                     $this->refresh();
