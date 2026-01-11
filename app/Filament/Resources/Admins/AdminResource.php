@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Admins;
 
+use App\Filament\Resources\Admins\Pages\{CreateAdmin, EditAdmin, ViewAdmin};
 use App\Filament\Resources\Employees\Schemas\EmployeeForm as AdminForm;
 use App\Filament\Resources\Employees\Schemas\EmployeeTable as AdminTable;
 use Filament\Schemas\Schema;
@@ -25,7 +26,7 @@ class AdminResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return AdminForm::configure($schema)
+        return AdminForm::configure($schema, )
 
         ;
     }
@@ -52,8 +53,9 @@ class AdminResource extends Resource
     {
         return [
             'index' => ListAdmins::route('/'),
-            // 'create' => Pages\CreateAdmin::route('/create'),
-            // 'edit' => Pages\EditAdmin::route('/{record}/edit'),
+            'create' => CreateAdmin::route('/create'),
+            'view' => ViewAdmin::route('/{record}'),
+            'edit' => EditAdmin::route('/{record}/edit'),
         ];
     }
 }

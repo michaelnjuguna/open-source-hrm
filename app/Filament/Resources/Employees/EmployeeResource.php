@@ -48,7 +48,7 @@ class EmployeeResource extends Resource
         return [
             'index' => ListEmployees::route('/'),
             'view' => ViewEmployee::route('/{record}'),
-            // 'create' => Pages\CreateEmployee::route('/create'),
+            'create' => Pages\CreateEmployee::route('/create'),
             'edit' => EditEmployee::route('/{record}/edit'),
         ];
     }

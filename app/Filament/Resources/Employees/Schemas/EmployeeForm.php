@@ -49,9 +49,9 @@ class EmployeeForm
                     ->schema([
                         Grid::make(2)
                             ->schema([
-                                TextInput::make('email')->email()->required()->label('Email Address (this will be the default password for the employee)')
+                                TextInput::make('email')->email()->required()->label(`Email Address (this will be the default password for the )`)
                                     ->unique(ignoreRecord: true)
-
+                                    ->copyable()
                                 ,
                                 TextInput::make('phone')->tel()->required()->label('Phone Number')->unique(ignoreRecord: true),
                                 TextInput::make('national_id')->required()->unique(ignoreRecord: true)
@@ -170,6 +170,7 @@ class EmployeeForm
                     ])
                     ->columnSpanFull(),
             ])
+
 
         ;
     }

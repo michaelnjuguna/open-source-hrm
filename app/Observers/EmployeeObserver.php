@@ -3,16 +3,23 @@
 namespace App\Observers;
 
 use App\Models\Employee;
+use Illuminate\Support\Facades\Hash;
 
 class EmployeeObserver
 {
     /**
      * Handle the Employee "created" event.
      */
+    public function creating(Employee $employee): void
+    {
+        if (empty($employee->password)) {
+            $employee->password = Hash::make($employee->email);
+        }
+    }
     public function created(Employee $employee): void
     {
         //
-        $employee->assignRole('employee');
+
     }
 
     /**

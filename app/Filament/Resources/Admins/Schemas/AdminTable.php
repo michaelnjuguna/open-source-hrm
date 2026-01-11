@@ -32,7 +32,9 @@ class AdminTable
             ])
             ->recordActions([
                 ActionGroup::make([
-                    EditAction::make(),
+                    EditAction::make()
+
+                    ,
                     ViewAction::make(),
                     DeleteAction::make()
                         ->hidden(fn($record) => auth()->id() === $record->id)
