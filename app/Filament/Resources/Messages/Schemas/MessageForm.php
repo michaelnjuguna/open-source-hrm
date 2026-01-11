@@ -15,11 +15,10 @@ class MessageForm
                 ->maxLength(255)
                 ->columnSpanFull()
                 ->label("Subject"),
-            Select::make("receiver")
+            Select::make("receiver_id")
                 ->label("receiver")
                 ->required()
                 ->multiple()
-
                 ->options(
                     Employee::all()->mapWithKeys(
                         fn($employee) => [

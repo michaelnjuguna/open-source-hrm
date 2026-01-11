@@ -19,7 +19,11 @@ class MessageInfolist
                     ->poll('3s')
                     ->label('')
                     ->schema([
-                        \Filament\Schemas\Components\Grid::make(5)
+                        \Filament\Schemas\Components\Grid::make([
+                            'default' => 1,
+                            'md' => 5,
+                            'lg' => 5,
+                        ])
 
                             ->schema([
                                 TextEntry::make('sender.name')
@@ -28,7 +32,11 @@ class MessageInfolist
                                     ->weight(FontWeight::Bold)
 
                                     ->icon('heroicon-s-user-circle')
-                                    ->columnSpan(2)
+                                    ->columnSpan([
+                                        'default' => 1,
+                                        'md' => 2,
+                                        'lg' => 2,
+                                    ])
                                 ,
                                 TextEntry::make('created_at')
                                     ->label('')
@@ -58,9 +66,14 @@ class MessageInfolist
                                         ->modalButton('Yes, Delete')
                                         ->modalIconColor('danger')
                                         ->modalIcon('heroicon-o-trash')
-                                        ->iconButton()
+                                        ->iconButton(),
 
-                                ])->alignEnd()->columnSpan(1)
+
+
+
+                                ])
+                                    ->alignEnd()
+                                    ->columnSpan(1)
 
 
                             ]),
@@ -79,10 +92,13 @@ class MessageInfolist
                         ])
 
                         ->action(function ($data, $livewire) {
+                            $userId = auth()->id();
+                            $receiverId = $userId === $livewire->record->receiver_id ? $livewire->record->creator_id : $livewire->record->receiver_id;
                             Message::create([
                                 'topic_id' => $livewire->record->id,
                                 'sender_id' => auth()->id(),
                                 'content' => $data['content'],
+                                'receiver_id' => $receiverId
                             ]);
 
 
