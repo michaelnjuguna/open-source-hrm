@@ -88,6 +88,7 @@ class EmployeeTable
                 TextColumn::make('email')
                     ->label('Email')
                     ->searchable()
+                    ->copyable()
                     ->sortable(),
                 TextColumn::make('phone')
                     ->label('Phone')

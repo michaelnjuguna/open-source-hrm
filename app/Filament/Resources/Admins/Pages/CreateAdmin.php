@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Admins\Pages;
 use App\Filament\Resources\Admins\AdminResource;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\Hash;
 
 class CreateAdmin extends CreateRecord
 {
@@ -15,7 +16,7 @@ class CreateAdmin extends CreateRecord
     }
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['password'] = $data['email'];
+        $data['password'] = Hash::make($data['email']);
         return $data;
     }
     protected function afterCreate(): void
