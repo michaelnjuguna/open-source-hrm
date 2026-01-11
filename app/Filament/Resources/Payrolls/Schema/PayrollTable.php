@@ -14,15 +14,15 @@ class PayrollTable
 
         return $table
             ->columns([
-                TextColumn::make('employee.employee_number')
-                    ->label('Emp No.')
+                TextColumn::make('employee.employee_code')
+                    ->label('Emp code')
                     ->sortable()
                     ->searchable(isIndividual: true)
-                    ->tooltip('Employee number')
+                    ->tooltip('Employee code')
                     ->searchable(),
 
 
-                TextColumn::make('employee.full_name')
+                TextColumn::make('employee.name')
                     ->label('Name')
                     ->searchable([
                         'first_name',
@@ -79,7 +79,7 @@ class PayrollTable
                         Select::make('employee_id')
                             ->label('Employee')
                             ->options(function () {
-                                return Employee::all()->pluck('full_name', 'id');
+                                return Employee::all()->pluck('name', 'id');
                             })
                             ->searchable()
                             ->required(),
