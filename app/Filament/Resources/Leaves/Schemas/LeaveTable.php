@@ -18,13 +18,13 @@ class LeaveTable
                     ->latest()
             )
             ->columns([
-                TextColumn::make('employee.employee_number')
-                    ->label('Employee No.')
+                TextColumn::make('employee.employee_code')
+                    ->label('Employee code')
                     ->searchable(
 
                     )
                     ->sortable(),
-                TextColumn::make('employee.full_name')
+                TextColumn::make('employee.name')
                     ->label('Employee')
                     ->searchable([
                         'first_name',
@@ -81,7 +81,7 @@ class LeaveTable
                             Leave::query()
                                 ->with('employee')
                                 ->get()
-                                ->pluck('employee.full_name', 'employee.id')
+                                ->pluck('employee.name', 'employee.id')
                         )
                         ->default(null),
                     SelectFilter::make('status')
