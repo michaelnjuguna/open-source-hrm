@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Filament\Resources\Departments\DepartmentResource;
 use App\Models\Department;
 use Filament\Notifications\Notification;
 use Filament\Actions\Action;
@@ -32,7 +33,7 @@ class DepartmentObserver
                 ->body($department->name)
                 ->actions([
                     Action::make('view')
-                        ->url(Department::getUrl())
+                        ->url(DepartmentResource::getUrl())
                         ->markAsRead()
                         ->label('View'),
                 ])
