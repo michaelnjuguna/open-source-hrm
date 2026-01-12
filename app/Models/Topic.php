@@ -4,21 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Topic extends Model
 {
+    use HasUuids;
+    
     protected $table = "topics";
+
     protected $fillable = [
         "subject",
         'creator_id',
         'receiver_id',
     ];
+
     protected $casts = [
         'subject' => 'string',
         'creator_id' => 'integer',
         'receiver_id' => 'integer',
     ];
-
 
     public function message()
     {

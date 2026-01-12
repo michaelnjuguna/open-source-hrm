@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class Shift extends Model
 {
-    //
+    use HasUuids;
+
     protected $table = 'shifts';
+
     protected $fillable = [
         'name',
         'start_time',
@@ -20,9 +23,11 @@ class Shift extends Model
         'end_time' => 'datetime:H:i',
 
     ];
+    
     protected $appends = [
         'duration',
     ];
+    
     public function getDurationAttribute()
     {
         $start = Carbon::parse($this->start_time);

@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Guava\Calendar\Contracts\Eventable;
 use Guava\Calendar\ValueObjects\CalendarEvent;
-
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Event extends Model implements Eventable
 {
+    use HasUuids;
+    
     protected $fillable = [
         'title',
         'description',
@@ -36,11 +38,9 @@ class Event extends Model implements Eventable
             ->backgroundColor($this->getEventColor())
             ->textColor('#ffffff')
             // ->id($this->id)
-            ->action('edit')
-
-        ;
-
+            ->action('edit');
     }
+
     protected function getEventColor(): string
     {
         return match ($this->type) {

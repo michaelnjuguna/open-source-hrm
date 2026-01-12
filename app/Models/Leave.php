@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class Leave extends Model
 {
-    //
+    use HasUuids;
+    
     protected $table = 'leave';
+    
     protected $fillable = [
         'employee_id',
         'actioned_by',
@@ -19,11 +22,13 @@ class Leave extends Model
         'rejection_reason',
         'notes'
     ];
+
     protected $casts = [
         'leave_date' => 'datetime:H:i',
         'start_date' => 'date',
         'end_date' => 'date',
     ];
+    
     protected $appends = [
         'duration',
 

@@ -6,9 +6,12 @@ use App\Filament\Pages\TaskBoard;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Notifications\Notification;
 use Filament\Actions\Action;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+
 class Task extends Model
 {
-    //
+    use HasUuids;
+
     protected $fillable = [
         'title',
         'description',
@@ -29,7 +32,9 @@ class Task extends Model
         'due_date' => 'datetime',
         'position' => 'integer',
     ];
+
     protected $table = 'tasks';
+
     protected $appends = ['date', 'email'];
 
     public function assignee()
@@ -37,11 +42,11 @@ class Task extends Model
         return $this->belongsTo(Employee::class, 'assignee_id');
     }
 
-
     public function getDateAttribute()
     {
         return $this->due_date?->format('d-M-Y');
     }
+    
     public function getEmailAttribute()
     {
         return $this->assignee?->email;

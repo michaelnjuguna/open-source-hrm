@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class Payroll extends Model
 {
+    use HasUuids;
+
     protected $table = 'payrolls';
+
     protected $fillable = [
         'employee_id',
         'pay_date',
@@ -19,6 +23,7 @@ class Payroll extends Model
         'notes',
         'status'
     ];
+
     protected $casts = [
         'deductions' => 'array',
         'allowances' => 'array',
@@ -28,6 +33,7 @@ class Payroll extends Model
     protected $with = [
         'employee',
     ];
+    
     public function employee()
     {
         return $this->belongsTo(Employee::class);
