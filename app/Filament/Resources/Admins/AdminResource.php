@@ -2,38 +2,28 @@
 
 namespace App\Filament\Resources\Admins;
 
-use App\Filament\Resources\Admin\Schemas\AdminTable;
 use App\Filament\Resources\Admins\Schemas\AdminForm;
 use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Actions\ActionGroup;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\Admins\Pages\ListAdmins;
-use App\Filament\Resources\AdminResource\Pages;
-use App\Filament\Resources\AdminResource\RelationManagers;
-
-use App\Models\User;
-use Filament\Forms;
-use Filament\Notifications\Notification;
+use App\Filament\Resources\Admins\Pages;
+use App\Filament\Resources\Admins\Tables\AdminTable;
+use App\Models\Employee;
+use BackedEnum;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-
+use UnitEnum;
 
 class AdminResource extends Resource
 {
     protected static ?string $model = Employee::class;
+
     protected static ?string $label = 'Admin';
-    protected static ?string $pluralLabel = 'Admins';
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-circle';
-    protected static string|\UnitEnum|null $navigationGroup = 'Organization';
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserCircle;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Master Data';
+
     protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema
@@ -57,7 +47,7 @@ class AdminResource extends Resource
     {
         return [
             'index' => ListAdmins::route('/'),
-            // 'create' => Pages\CreateAdmin::route('/create'),
+            'create' => Pages\CreateAdmin::route('/create'),
             // 'edit' => Pages\EditAdmin::route('/{record}/edit'),
         ];
     }
