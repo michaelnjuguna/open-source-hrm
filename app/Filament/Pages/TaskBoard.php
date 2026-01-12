@@ -25,6 +25,8 @@ class TaskBoard extends BoardPage
     protected static ?string $navigationLabel = 'Task Board';
     protected static ?string $title = 'Task Board';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|\UnitEnum|null $navigationGroup = "Work space";
 
     public function board(Board $board): Board
