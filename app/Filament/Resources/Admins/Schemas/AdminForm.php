@@ -1,42 +1,37 @@
 <?php
 namespace App\Filament\Resources\Admins\Schemas;
-use Filament\Forms\Components\{TextInput};
+
+use App\Models\Employee;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+
 class AdminForm
 {
     public static function configure(Schema $schema): Schema
     {
         return $schema
             ->components([
-                //
-                TextInput::make('name')
-                    ->label('Name')
-                    ->required()
-                    ->maxLength(255)
-                ,
-                TextInput::make('email')
-                    ->label('Email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255)
-                    ->unique(ignoreRecord: true)
-                ,
-
-                TextInput::make('password')
-                    ->label('Password')
-                    ->password()
-                    ->revealable()
-                    ->required()
-                    ->same('password_confirmation')
-                    ->maxLength(255),
-                TextInput::make('password_confirmation')
-                    ->label('Confirm Password')
-                    ->password()
-                    ->revealable()
-                    ->required()
-                    ->maxLength(255)
-                    ->same('password')
-
+                Section::make('Promosikan Pegawai')
+                    ->description('Pilih pegawai yang sudah terdaftar untuk dijadikan Administrator.')
+                    ->icon('heroicon-o-user-plus')
+                    ->schema([
+                        Select::make('employee_id')
+                            ->label('Cari Pegawai')
+                            ->placeholder('Ketik nama pegawai...')
+                            ->options(function () {
+                                // Hanya tampilkan pegawai yang BELUM jadi admin
+                                return Employee::query()
+                                    ->whereDoesntHave('roles', fn ($q) => $q->where('name', 'admin'))
+                                    ->pluck('first_name', 'id') // Sesuaikan 'first_name' jika ada accessor full_name
+                                    ->map(fn ($name, $id) => Employee::find($id)->name ?? $name);
+                            })
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->columnSpanFull()
+                            ->helperText('Pegawai yang dipilih akan mendapatkan hak akses penuh sebagai Admin.'),
+                    ])
             ]);
     }
 }
