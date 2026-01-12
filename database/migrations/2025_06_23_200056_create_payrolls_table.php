@@ -11,8 +11,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('payrolls', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('employee_id')
+            $table->uuid('id')->primary();
+            $table->foreignUuid('employee_id')
                 ->onDelete('set null')
                 ->constrained('employees');
             $table->date('pay_date');

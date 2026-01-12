@@ -11,18 +11,18 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('topics', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('subject');
-            $table->foreignId('creator_id');
-            $table->foreignId('receiver_id');
+            $table->foreignUuid('creator_id');
+            $table->foreignUuid('receiver_id');
             $table->timestamps();
 
 
         });
         Schema::create('messages', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('topic_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('sender_id');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('topic_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('sender_id');
             $table->text('content');
             $table->datetime('read_at')->nullable();
             $table->timestamps();

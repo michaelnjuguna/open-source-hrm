@@ -11,13 +11,13 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('attendances', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('employee_id')->constrained('employees')->onDelete('cascade');
             $table->date('date');
             $table->time('clock_in')->nullable();
             $table->time('clock_out')->nullable();
             // $table->decimal('hours_worked', 5, 2)->nullable();
-            $table->foreignId('shift_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignUuid('shift_id')->nullable()->constrained()->onDelete('set null');
             $table->text('remarks')->nullable();
             $table->timestamps();
 

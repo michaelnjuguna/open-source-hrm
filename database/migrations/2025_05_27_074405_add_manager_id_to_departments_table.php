@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::table('departments', function (Blueprint $table) {
             //
-            $table->foreignId('manager_id')->nullable()->constrained('employees')->onDelete('set null');
+            $table->foreignUuid('manager_id')->nullable()->constrained('employees')->onDelete('set null');
         });
     }
 

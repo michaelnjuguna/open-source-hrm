@@ -11,12 +11,12 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('tasks', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('title');
             $table->text('description')->nullable();
             $table->enum('status', ['todo', 'in_progress', 'completed'])->default('todo');
             $table->integer('sort_order')->nullable();
-            $table->foreignId('assignee_id')->nullable()->constrained('employees')->onDelete('set null');
+            $table->foreignUuid('assignee_id')->nullable()->constrained('employees')->onDelete('set null');
 
             $table->date('due_date')->nullable();
             $table->timestamps();

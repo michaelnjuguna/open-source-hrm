@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('employees', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('employee_code')->nullable();
             $table->string('first_name');
             $table->string('last_name');
@@ -26,11 +26,11 @@ return new class extends Migration {
             $table->date('date_of_birth')->nullable();
             $table->enum('gender', ['Male', 'Female'])->nullable();
             $table->enum('marital_status', ['Single', 'Married', 'Divorced', 'Widowed'])->nullable();
-            $table->foreignId('department_id')
+            $table->foreignUuid('department_id')
                 ->nullable()
                 ->constrained('departments')
                 ->onDelete('set null');
-            $table->foreignId('position_id')
+            $table->foreignUuid('position_id')
                 ->nullable()
                 ->constrained('positions')
                 ->onDelete('set null');
@@ -59,7 +59,7 @@ return new class extends Migration {
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
+            $table->foreignUuid('user_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
